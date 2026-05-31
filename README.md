@@ -5,8 +5,8 @@ TinaIDE 插件市场和依赖包市场的公开 Registry。
 客户端默认按顺序读取：
 
 ```text
-https://cdn.jsdelivr.net/gh/wuxianggujun/TinaIDE-Registry@main
 https://raw.githubusercontent.com/wuxianggujun/TinaIDE-Registry/main
+https://cdn.jsdelivr.net/gh/wuxianggujun/TinaIDE-Registry@main
 ```
 
 ## 目录结构
