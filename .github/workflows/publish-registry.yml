@@ -1,0 +1,114 @@
+name: Publish Registry
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Optional tag name. Empty creates registry-yyyyMMdd-HHmmss.
+        required: false
+        type: string
+      create_release:
+        description: Create a GitHub Release for the tag.
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-registry
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Require main branch
+        shell: pwsh
+        run: |
+          if ("${{ github.ref_name }}" -ne "main") {
+            throw "Publish Registry must run from main, current ref is ${{ github.ref_name }}."
+          }
+
+      - name: Build registry
+        shell: pwsh
+        run: ./scripts/build-registry.ps1
+
+      - name: Validate registry
+        shell: pwsh
+        run: ./scripts/validate-registry.ps1 -SkipBuild -SkipGitDiffCheck
+
+      - name: Commit generated registry artifacts
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          $diff = git status --porcelain
+          if (-not [string]::IsNullOrWhiteSpace(($diff -join "`n"))) {
+            git add plugins packages sources/plugins metadata scripts
+            git commit -m "chore: rebuild registry artifacts"
+            git push origin HEAD:main
+          } else {
+            Write-Host "No generated changes to commit."
+          }
+
+      - name: Create registry tag
+        id: tag
+        shell: pwsh
+        run: |
+          $tag = "${{ inputs.tag }}".Trim()
+          if ([string]::IsNullOrWhiteSpace($tag)) {
+            $tag = "registry-$(Get-Date -AsUTC -Format 'yyyyMMdd-HHmmss')"
+          }
+          $existing = git ls-remote --tags origin "refs/tags/$tag"
+          if (-not [string]::IsNullOrWhiteSpace($existing)) {
+            throw "Tag already exists: $tag"
+          }
+          git tag -a $tag -m "TinaIDE Registry $tag"
+          git push origin $tag
+          "tag=$tag" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Write release notes
+        if: ${{ inputs.create_release }}
+        shell: pwsh
+        run: |
+          $plugins = (Get-Content plugins/index.json -Raw | ConvertFrom-Json).plugins
+          $packages = (Get-Content packages/index.json -Raw | ConvertFrom-Json).packages
+          $pluginLines = $plugins | ForEach-Object {
+            $latest = @($_.versions)[0]
+            "- plugin $($_.plugin_id) $($latest.version)"
+          }
+          $packageLines = $packages | ForEach-Object {
+            "- package $($_.id) $($_.android.version)"
+          }
+          $notes = @(
+            "TinaIDE Registry snapshot.",
+            "",
+            "Plugins: $($plugins.Count)",
+            "Packages: $($packages.Count)",
+            "",
+            "Contents:",
+            $pluginLines,
+            $packageLines,
+            "",
+            "Indexes:",
+            "- plugins/index.json",
+            "- packages/index.json"
+          )
+          $notes | Set-Content -Path release-notes.md -Encoding UTF8
+
+      - name: Create GitHub Release
+        if: ${{ inputs.create_release }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          gh release create "${{ steps.tag.outputs.tag }}" `
+            --title "TinaIDE Registry ${{ steps.tag.outputs.tag }}" `
+            --notes-file release-notes.md

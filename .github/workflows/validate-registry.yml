@@ -1,0 +1,39 @@
+name: Validate Registry
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-registry-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build registry
+        shell: pwsh
+        run: ./scripts/build-registry.ps1
+
+      - name: Validate registry
+        shell: pwsh
+        run: ./scripts/validate-registry.ps1 -SkipBuild -SkipGitDiffCheck
+
+      - name: Require committed generated files
+        shell: pwsh
+        run: |
+          $diff = git status --porcelain
+          if (-not [string]::IsNullOrWhiteSpace(($diff -join "`n"))) {
+            git status --short
+            throw "Generated registry artifacts are stale. Run scripts/build-registry.ps1 and commit the result."
+          }
