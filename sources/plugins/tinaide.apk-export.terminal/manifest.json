@@ -1,0 +1,22 @@
+{
+  "id": "tinaide.apk-export.terminal",
+  "name": "Terminal APK Export",
+  "version": "1.0.3",
+  "description": "Adds APK export support for terminal-style native executables.",
+  "type": "config",
+  "author": {
+    "name": "TinaIDE"
+  },
+  "contributions": {
+    "apkExports": [
+      {
+        "id": "terminal-shell",
+        "name": "Terminal Shell",
+        "description": "Package a native executable into the terminal shell template.",
+        "projectTypes": ["TERMINAL"],
+        "templateType": "terminal",
+        "templatePath": "templates/template-terminal.apk"
+      }
+    ]
+  }
+}

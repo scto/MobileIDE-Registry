@@ -1,0 +1,53 @@
+{
+  "id": "com.example.{{PROJECT_NAME}}",
+  "name": "{{PROJECT_NAME}}",
+  "version": "0.1.0",
+  "type": "config",
+  "description": "Starter config plugin for TinaIDE.",
+  "author": {
+    "name": "Your Name"
+  },
+  "contributions": {
+    "themes": [
+      "themes/starter-theme.json"
+    ],
+    "snippets": [
+      "snippets/starter-snippets.json"
+    ],
+    "commands": [
+      {
+        "id": "editor.format",
+        "title": "Format Active File"
+      },
+      {
+        "id": "file.copyPath",
+        "title": "Copy Selected Path"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "editor.format",
+          "group": "9_plugin",
+          "when": "isDirty"
+        }
+      ],
+      "filetree/context": [
+        {
+          "command": "file.copyPath",
+          "group": "9_plugin",
+          "when": "isFile"
+        }
+      ]
+    },
+    "fileIcons": [
+      {
+        "icon": "icons/starter-file.svg",
+        "extensions": [
+          "tinaplugin"
+        ],
+        "priority": 10
+      }
+    ]
+  }
+}

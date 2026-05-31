@@ -1,0 +1,17 @@
+{
+  "id": "tinaide.linux-environment",
+  "name": "Linux Environment",
+  "version": "1.0.0",
+  "type": "system",
+  "description": "Provide Linux environment capability powered by PRoot.",
+  "author": {
+    "name": "TinaIDE Team"
+  },
+  "capabilities": [
+    "linuxEnvironment"
+  ],
+  "lifecycle": {
+    "requiresSetup": true
+  }
+}
+

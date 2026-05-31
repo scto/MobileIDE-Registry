@@ -1,0 +1,5 @@
+dist/
+.pack/
+.idea/
+.vscode/
+*.log

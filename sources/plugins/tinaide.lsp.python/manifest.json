@@ -1,0 +1,91 @@
+{
+  "id": "tinaide.lsp.python",
+  "name": "Python Language Support",
+  "version": "1.0.0",
+  "type": "lsp",
+  "author": {
+    "name": "TinaIDE Team"
+  },
+  "description": "Python language support with Python Language Server (pylsp)",
+  "contributions": {
+    "languageServers": [
+      {
+        "id": "pylsp",
+        "name": "Python Language Server",
+        "languages": [
+          "python"
+        ],
+        "fileExtensions": [
+          "py",
+          "pyw"
+        ],
+        "runtime": {
+          "type": "python",
+          "minVersion": "3.8"
+        },
+        "server": {
+          "type": "stdio",
+          "command": "pylsp"
+        },
+        "capabilities": {
+          "completion": true,
+          "hover": true,
+          "signatureHelp": true,
+          "definition": true,
+          "references": true,
+          "documentHighlight": true,
+          "documentSymbol": true,
+          "codeAction": true,
+          "formatting": true,
+          "rename": true
+        }
+      }
+    ],
+    "toolchains": [
+      {
+        "id": "python3",
+        "name": "Python 3",
+        "type": "system",
+        "required": true,
+        "verifyCommand": "python3 --version",
+        "verifyPattern": "Python 3\\.",
+        "packagesByManager": {
+          "apk": [
+            "python3",
+            "py3-pip"
+          ],
+          "apt": [
+            "python3",
+            "python3-pip"
+          ],
+          "pacman": [
+            "python",
+            "python-pip"
+          ],
+          "dnf": [
+            "python3",
+            "python3-pip"
+          ]
+        }
+      },
+      {
+        "id": "pylsp",
+        "name": "Python Language Server",
+        "type": "pip",
+        "packages": [
+          "python-lsp-server"
+        ],
+        "required": true,
+        "verifyCommand": "pylsp --version",
+        "verifyPattern": "pylsp"
+      }
+    ]
+  },
+  "activationEvents": [
+    "onLanguage:python",
+    "workspaceContains:**/*.py",
+    "workspaceContains:requirements.txt",
+    "workspaceContains:setup.py",
+    "workspaceContains:pyproject.toml"
+  ]
+}

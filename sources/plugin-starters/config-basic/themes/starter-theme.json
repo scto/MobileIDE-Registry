@@ -1,0 +1,12 @@
+{
+  "name": "{{PROJECT_NAME}} Theme",
+  "type": "dark",
+  "colors": {
+    "WHOLE_BACKGROUND": "#111827",
+    "TEXT_NORMAL": "#E5E7EB",
+    "KEYWORD": "#F59E0B",
+    "COMMENT": "#6B7280",
+    "LITERAL": "#34D399",
+    "FUNCTION_NAME": "#60A5FA"
+  }
+}

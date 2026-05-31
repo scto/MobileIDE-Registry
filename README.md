@@ -1,2 +1,43 @@
-# TinaIDE-Registry
-Public registry for TinaIDE plugins and packages
+# TinaIDE Registry
+
+TinaIDE 插件市场和依赖包市场的公开 Registry。
+
+客户端默认按顺序读取：
+
+```text
+https://cdn.jsdelivr.net/gh/wuxianggujun/TinaIDE-Registry@main
+https://raw.githubusercontent.com/wuxianggujun/TinaIDE-Registry/main
+```
+
+## 目录结构
+
+```text
+plugins/index.json                         # 插件市场索引
+plugins/<plugin-id>/<version>/*.tinaplug   # 插件发布包
+packages/index.json                        # 依赖包市场索引
+packages/<package-id>/<version>/*          # 依赖包发布文件
+sources/plugins/**                         # 官方插件源码或完整打包目录
+sources/plugin-starters/**                 # 插件脚手架源模板和校验/打包脚本
+metadata/*.json                            # 生成索引用的元数据
+scripts/*.ps1                              # Registry 构建脚本
+```
+
+## 构建索引
+
+```powershell
+pwsh ./scripts/build-registry.ps1
+```
+
+该脚本会：
+
+- 重新构建官方插件脚手架 zip。
+- 将 `sources/plugins/**` 打包成 `.tinaplug`。
+- 计算插件包和依赖包的 `sha256` 与文件大小。
+- 重写 `plugins/index.json` 和 `packages/index.json`。
+
+## 发布规则
+
+- 插件发布内容放在 `sources/plugins/<plugin-id>/`，根目录必须包含 `manifest.json`。
+- 依赖包发布文件放在 `packages/<package-id>/<version>/`。
+- 大文件可以不放入本仓库，但必须在索引中填写可信 CDN、对象存储或自建代理的绝对 URL。
+- 不要把 Android 客户端源码、后端、数据库或管理后台放入本仓库。

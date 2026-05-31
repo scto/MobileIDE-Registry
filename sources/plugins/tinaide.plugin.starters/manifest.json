@@ -1,0 +1,46 @@
+{
+  "id": "tinaide.plugin.starters",
+  "name": "TinaIDE Plugin Starters",
+  "version": "1.0.1",
+  "type": "config",
+  "description": "Starter templates for TinaIDE plugin development.",
+  "author": {
+    "name": "TinaIDE Team"
+  },
+  "contributions": {
+    "projectTemplates": [
+      {
+        "id": "config-basic",
+        "name": "Tina Config Plugin",
+        "description": "Theme, snippet, menu and file icon starter.",
+        "templatePath": "templates/tina-config-plugin.zip",
+        "buildSystem": "plugin",
+        "primaryLanguage": "MIXED"
+      },
+      {
+        "id": "script-command",
+        "name": "Tina Script Command Plugin (Beta)",
+        "description": "Lua command plugin starter with editor actions and menus.",
+        "templatePath": "templates/tina-script-command-plugin.zip",
+        "buildSystem": "plugin",
+        "primaryLanguage": "MIXED"
+      },
+      {
+        "id": "script-basic",
+        "name": "Tina Script Plugin (Beta)",
+        "description": "Lua automation and event plugin starter.",
+        "templatePath": "templates/tina-script-plugin.zip",
+        "buildSystem": "plugin",
+        "primaryLanguage": "MIXED"
+      },
+      {
+        "id": "lsp-basic",
+        "name": "Tina LSP Plugin",
+        "description": "Language server plugin starter.",
+        "templatePath": "templates/tina-lsp-plugin.zip",
+        "buildSystem": "plugin",
+        "primaryLanguage": "MIXED"
+      }
+    ]
+  }
+}

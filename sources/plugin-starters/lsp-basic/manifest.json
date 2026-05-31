@@ -1,0 +1,62 @@
+{
+  "id": "tinaide.lsp.{{PROJECT_NAME}}",
+  "name": "{{PROJECT_NAME}} Language Support",
+  "version": "0.1.0",
+  "type": "lsp",
+  "description": "Starter LSP plugin for TinaIDE.",
+  "author": {
+    "name": "Your Name"
+  },
+  "contributions": {
+    "languageServers": [
+      {
+        "id": "{{PROJECT_NAME}}-server",
+        "name": "{{PROJECT_NAME}} Language Server",
+        "languages": [
+          "replace-me"
+        ],
+        "fileExtensions": [
+          "replace-me"
+        ],
+        "server": {
+          "type": "stdio",
+          "command": "replace-me"
+        },
+        "capabilities": {
+          "completion": true,
+          "hover": true,
+          "definition": true,
+          "references": true,
+          "documentSymbol": true
+        }
+      }
+    ],
+    "toolchains": [
+      {
+        "id": "{{PROJECT_NAME}}-runtime",
+        "name": "Replace Runtime",
+        "type": "npm",
+        "packages": [
+          "replace-runtime"
+        ],
+        "required": true,
+        "verifyCommand": "replace-runtime --version",
+        "verifyPattern": ".+"
+      },
+      {
+        "id": "{{PROJECT_NAME}}-server-bin",
+        "name": "Replace Language Server",
+        "type": "npm",
+        "packages": [
+          "replace-me"
+        ],
+        "required": true,
+        "verifyCommand": "replace-me --version",
+        "verifyPattern": ".+"
+      }
+    ]
+  },
+  "activationEvents": [
+    "onLanguage:replace-me"
+  ]
+}

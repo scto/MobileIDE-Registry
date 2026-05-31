@@ -1,0 +1,76 @@
+{
+  "plugins": [
+    {
+      "source": "sources/plugins/tinaide.plugin.starters",
+      "category": "development",
+      "tags": ["starter", "template", "plugin"],
+      "publisher": {
+        "id": "tinaide",
+        "display_name": "TinaIDE"
+      },
+      "repository_url": "https://github.com/wuxianggujun/TinaIDE-Registry/tree/main/sources/plugins/tinaide.plugin.starters",
+      "homepage_url": "https://github.com/wuxianggujun/TinaIDE-Registry",
+      "license": "Apache-2.0",
+      "download_count": 0,
+      "rating_avg": 0.0,
+      "rating_count": 0,
+      "created_at": "2026-05-21T00:00:00Z",
+      "updated_at": "2026-06-01T00:00:00Z",
+      "changelog": "Move official plugin starter templates into TinaIDE Registry."
+    },
+    {
+      "source": "sources/plugins/tinaide.lsp.python",
+      "category": "lsp",
+      "tags": ["python", "lsp", "language-server"],
+      "publisher": {
+        "id": "tinaide",
+        "display_name": "TinaIDE"
+      },
+      "repository_url": "https://github.com/wuxianggujun/TinaIDE-Registry/tree/main/sources/plugins/tinaide.lsp.python",
+      "homepage_url": "https://github.com/wuxianggujun/TinaIDE-Registry",
+      "license": "Apache-2.0",
+      "download_count": 0,
+      "rating_avg": 0.0,
+      "rating_count": 0,
+      "created_at": "2026-05-21T00:00:00Z",
+      "updated_at": "2026-06-01T00:00:00Z",
+      "changelog": "Publish Python LSP plugin from the standalone Registry."
+    },
+    {
+      "source": "sources/plugins/tinaide.linux-environment",
+      "category": "system",
+      "tags": ["linux", "proot", "environment"],
+      "publisher": {
+        "id": "tinaide",
+        "display_name": "TinaIDE"
+      },
+      "repository_url": "https://github.com/wuxianggujun/TinaIDE-Registry/tree/main/sources/plugins/tinaide.linux-environment",
+      "homepage_url": "https://github.com/wuxianggujun/TinaIDE-Registry",
+      "license": "Apache-2.0",
+      "download_count": 0,
+      "rating_avg": 0.0,
+      "rating_count": 0,
+      "created_at": "2026-05-21T00:00:00Z",
+      "updated_at": "2026-06-01T00:00:00Z",
+      "changelog": "Publish Linux environment plugin metadata from the standalone Registry."
+    },
+    {
+      "source": "sources/plugins/tinaide.apk-export.terminal",
+      "category": "apk-export",
+      "tags": ["apk", "export", "terminal"],
+      "publisher": {
+        "id": "tinaide",
+        "display_name": "TinaIDE"
+      },
+      "repository_url": "https://github.com/wuxianggujun/TinaIDE-Registry/tree/main/sources/plugins/tinaide.apk-export.terminal",
+      "homepage_url": "https://github.com/wuxianggujun/TinaIDE-Registry",
+      "license": "Apache-2.0",
+      "download_count": 0,
+      "rating_avg": 0.0,
+      "rating_count": 0,
+      "created_at": "2026-05-21T00:00:00Z",
+      "updated_at": "2026-06-01T00:00:00Z",
+      "changelog": "Move terminal APK export plugin and template APK into TinaIDE Registry."
+    }
+  ]
+}

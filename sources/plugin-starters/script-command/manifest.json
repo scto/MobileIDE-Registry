@@ -1,0 +1,50 @@
+{
+  "id": "com.example.{{PROJECT_NAME}}",
+  "name": "{{PROJECT_NAME}}",
+  "version": "0.1.0",
+  "type": "script",
+  "description": "Command-focused Lua plugin starter for TinaIDE.",
+  "author": {
+    "name": "Your Name"
+  },
+  "main": "main.lua",
+  "contributions": {
+    "commands": [
+      {
+        "id": "com.example.{{PROJECT_NAME}}.toggleFileTree",
+        "title": "Toggle File Tree"
+      },
+      {
+        "id": "com.example.{{PROJECT_NAME}}.insertHeader",
+        "title": "Insert Starter Header"
+      },
+      {
+        "id": "com.example.{{PROJECT_NAME}}.wrapSelection",
+        "title": "Wrap Selection"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "com.example.{{PROJECT_NAME}}.insertHeader",
+          "group": "5_editor"
+        },
+        {
+          "command": "com.example.{{PROJECT_NAME}}.wrapSelection",
+          "group": "5_editor"
+        },
+        {
+          "command": "com.example.{{PROJECT_NAME}}.toggleFileTree",
+          "group": "9_plugin"
+        }
+      ]
+    }
+  },
+  "permissions": [
+    "ui.notification",
+    "editor.read",
+    "editor.selection",
+    "editor.write",
+    "command.execute"
+  ]
+}
