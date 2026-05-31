@@ -46,6 +46,20 @@ function ConvertTo-JsonText {
     return ($Value | ConvertTo-Json -Depth 32)
 }
 
+function Get-ArchiveRelativePath {
+    param(
+        [Parameter(Mandatory = $true)][string]$BasePath,
+        [Parameter(Mandatory = $true)][string]$FilePath
+    )
+
+    try {
+        return ([System.IO.Path]::GetRelativePath($BasePath, $FilePath)).Replace("\", "/")
+    } catch {
+        $baseUri = [Uri]($BasePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar)
+        return [Uri]::UnescapeDataString($baseUri.MakeRelativeUri([Uri]$FilePath).ToString())
+    }
+}
+
 function New-TinaPlugArchive {
     param(
         [Parameter(Mandatory = $true)][string]$SourceDir,
@@ -60,14 +74,13 @@ function New-TinaPlugArchive {
     }
 
     $sourcePath = (Resolve-Path -LiteralPath $SourceDir).Path
-    $sourceUri = [Uri]($sourcePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar)
     $fixedTime = [DateTimeOffset]::new(2020, 1, 1, 0, 0, 0, [TimeSpan]::Zero)
     $zip = [System.IO.Compression.ZipFile]::Open($OutputFile, [System.IO.Compression.ZipArchiveMode]::Create)
     try {
         Get-ChildItem -LiteralPath $sourcePath -File -Recurse -Force |
             Sort-Object FullName |
             ForEach-Object {
-                $relativePath = [Uri]::UnescapeDataString($sourceUri.MakeRelativeUri([Uri]$_.FullName).ToString())
+                $relativePath = Get-ArchiveRelativePath -BasePath $sourcePath -FilePath $_.FullName
                 $entry = $zip.CreateEntry($relativePath, [System.IO.Compression.CompressionLevel]::Optimal)
                 $entry.LastWriteTime = $fixedTime
                 $entryStream = $entry.Open()
