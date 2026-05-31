@@ -53,7 +53,7 @@ pwsh ./scripts/validate-registry.ps1
 ## GitHub Actions
 
 - `Validate Registry`：在 `main` push、PR 和手动触发时运行，重建并校验索引；如果生成物没有提交，会直接失败。
-- `Publish Registry`：手动触发发布，重建并校验 Registry，必要时自动提交生成物，然后创建 `registry-yyyyMMdd-HHmmss` tag 和 GitHub Release。也可以在触发时指定自定义 tag。
+- `Publish Registry`：手动触发发布，重建并校验 Registry，必要时自动提交生成物，然后创建 `registry-yyyyMMdd-HHmmss` tag 和 GitHub Release。Release 会额外上传单个插件包、单个依赖包和索引文件；GitHub 自动生成的 Source code 压缩包仅用于源码快照，不用于市场下载。
 
 ## 发布规则
 

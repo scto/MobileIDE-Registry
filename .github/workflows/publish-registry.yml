@@ -99,9 +99,16 @@ jobs:
             "",
             "Indexes:",
             "- plugins/index.json",
-            "- packages/index.json"
+            "- packages/index.json",
+            "",
+            "Release assets include individual plugin/package files. Do not use the auto-generated source code archives for marketplace downloads."
           )
           $notes | Set-Content -Path release-notes.md -Encoding UTF8
+
+      - name: Prepare individual release assets
+        if: ${{ inputs.create_release }}
+        shell: pwsh
+        run: ./scripts/prepare-release-assets.ps1 -OutputDir release-assets
 
       - name: Create GitHub Release
         if: ${{ inputs.create_release }}
@@ -109,6 +116,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         shell: pwsh
         run: |
+          $assets = Get-ChildItem release-assets -File | Sort-Object Name | ForEach-Object { $_.FullName }
           gh release create "${{ steps.tag.outputs.tag }}" `
+            @assets `
             --title "TinaIDE Registry ${{ steps.tag.outputs.tag }}" `
             --notes-file release-notes.md
