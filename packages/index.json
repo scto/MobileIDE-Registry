@@ -1,55 +1,53 @@
 {
-    "categories":  [
-                       {
-                           "id":  "library",
-                           "name":  "Library",
-                           "name_en":  "Library",
-                           "sort_order":  0
-                       }
-                   ],
-    "packages":  [
-                     {
-                         "id":  "sdl3",
-                         "name":  "SDL3",
-                         "description":  "Simple DirectMedia Layer 3 - Cross-platform multimedia library",
-                         "category":  "library",
-                         "homepage":  "https://www.libsdl.org/",
-                         "android":  {
-                                         "version":  "3.5.0",
-                                         "install_type":  "download",
-                                         "size":  1239536,
-                                         "download_url":  "packages/sdl3/3.5.0/sdl3.tar.xz",
-                                         "checksum":  "sha256:73a36ccd6a0dc6f7e358a5e92c68e57a3d6dabf217f782aeb87baa7a3460c67f",
-                                         "abi":  [
-                                                     "arm64-v8a"
-                                                 ],
-                                         "is_latest":  true,
-                                         "release_notes":  "Initial Registry-hosted SDL3 Android package."
-                                     }
-                     }
-                 ],
-    "versions":  {
-                     "sdl3":  {
-                                  "android":  [
-                                                  {
-                                                      "id":  2,
-                                                      "package_id":  "sdl3",
-                                                      "platform":  "android",
-                                                      "version":  "3.5.0",
-                                                      "install_type":  "download",
-                                                      "download_size":  1239536,
-                                                      "download_url":  "packages/sdl3/3.5.0/sdl3.tar.xz",
-                                                      "checksum":  "sha256:73a36ccd6a0dc6f7e358a5e92c68e57a3d6dabf217f782aeb87baa7a3460c67f",
-                                                      "abi":  [
-                                                                  "arm64-v8a"
-                                                              ],
-                                                      "is_latest":  true,
-                                                      "release_notes":  "Initial Registry-hosted SDL3 Android package."
-                                                  }
-                                              ]
-                              }
-                 },
-    "downloads":  {
-
-                  }
+  "categories": [
+    {
+      "id": "library",
+      "name": "Library",
+      "name_en": "Library",
+      "sort_order": 0
+    }
+  ],
+  "packages": [
+    {
+      "id": "sdl3",
+      "name": "SDL3",
+      "description": "Simple DirectMedia Layer 3 - Cross-platform multimedia library",
+      "category": "library",
+      "homepage": "https://www.libsdl.org/",
+      "android": {
+        "version": "3.5.0",
+        "install_type": "download",
+        "size": 1239536,
+        "download_url": "packages/sdl3/3.5.0/sdl3.tar.xz",
+        "checksum": "sha256:73a36ccd6a0dc6f7e358a5e92c68e57a3d6dabf217f782aeb87baa7a3460c67f",
+        "abi": [
+          "arm64-v8a"
+        ],
+        "is_latest": true,
+        "release_notes": "Initial Registry-hosted SDL3 Android package."
+      }
+    }
+  ],
+  "versions": {
+    "sdl3": {
+      "android": [
+        {
+          "id": 2,
+          "package_id": "sdl3",
+          "platform": "android",
+          "version": "3.5.0",
+          "install_type": "download",
+          "download_size": 1239536,
+          "download_url": "packages/sdl3/3.5.0/sdl3.tar.xz",
+          "checksum": "sha256:73a36ccd6a0dc6f7e358a5e92c68e57a3d6dabf217f782aeb87baa7a3460c67f",
+          "abi": [
+            "arm64-v8a"
+          ],
+          "is_latest": true,
+          "release_notes": "Initial Registry-hosted SDL3 Android package."
+        }
+      ]
+    }
+  },
+  "downloads": {}
 }
