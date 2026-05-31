@@ -1,3 +1,5 @@
+* text=auto eol=lf
+
 *.apk binary
 *.tar.xz binary
 *.tinaplug binary
