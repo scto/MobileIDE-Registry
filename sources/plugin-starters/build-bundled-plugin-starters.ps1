@@ -49,6 +49,7 @@ function New-DeterministicZip {
                 $relativePath = Get-ArchiveRelativePath -BasePath $sourcePath -FilePath $_.FullName
                 $entry = $zip.CreateEntry($relativePath, [System.IO.Compression.CompressionLevel]::Optimal)
                 $entry.LastWriteTime = $fixedTime
+                $entry.ExternalAttributes = 0
                 $entryStream = $entry.Open()
                 try {
                     $fileStream = [System.IO.File]::OpenRead($_.FullName)

@@ -14,7 +14,8 @@ function Write-Utf8NoBom {
     )
 
     $encoding = [System.Text.UTF8Encoding]::new($false)
-    [System.IO.File]::WriteAllText($Path, $Content, $encoding)
+    $normalized = $Content -replace "`r`n", "`n" -replace "`r", "`n"
+    [System.IO.File]::WriteAllText($Path, $normalized, $encoding)
 }
 
 function Get-FileSha256 {
@@ -83,6 +84,7 @@ function New-TinaPlugArchive {
                 $relativePath = Get-ArchiveRelativePath -BasePath $sourcePath -FilePath $_.FullName
                 $entry = $zip.CreateEntry($relativePath, [System.IO.Compression.CompressionLevel]::Optimal)
                 $entry.LastWriteTime = $fixedTime
+                $entry.ExternalAttributes = 0
                 $entryStream = $entry.Open()
                 try {
                     $fileStream = [System.IO.File]::OpenRead($_.FullName)
