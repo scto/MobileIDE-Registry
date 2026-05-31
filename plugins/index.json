@@ -22,8 +22,8 @@
                                          {
                                              "version":  "1.0.1",
                                              "version_code":  10001,
-                                             "file_size":  53010,
-                                             "file_hash":  "sha256:8a64fdb9950e3d5467d0ae83871b2d41e2bf627fff4281aadbf278f7542c5be6",
+                                             "file_size":  52992,
+                                             "file_hash":  "sha256:8cf5e99d48a3e35076dfd28ddb1daabd2bfcecca166fce21b3e7713c4574bcc7",
                                              "download_url":  "plugins/tinaide.plugin.starters/1.0.1/tinaide.plugin.starters.tinaplug",
                                              "changelog":  "Move official plugin starter templates into TinaIDE Registry.",
                                              "created_at":  "2026-06-01T00:00:00Z"
@@ -58,7 +58,7 @@
                                              "version":  "1.0.0",
                                              "version_code":  10000,
                                              "file_size":  732,
-                                             "file_hash":  "sha256:5fa9277519e544a1c3f6ceb8b628ebc294c5e7d81c02c5572965f22d3ae2f28f",
+                                             "file_hash":  "sha256:d303b70d622a09e26b3a015533df415a42e961cdb6ac1faea359a8c4b068c3ce",
                                              "download_url":  "plugins/tinaide.lsp.python/1.0.0/tinaide.lsp.python.tinaplug",
                                              "changelog":  "Publish Python LSP plugin from the standalone Registry.",
                                              "created_at":  "2026-06-01T00:00:00Z"
@@ -93,7 +93,7 @@
                                              "version":  "1.0.0",
                                              "version_code":  10000,
                                              "file_size":  326,
-                                             "file_hash":  "sha256:dd4e34d364c8f78bf8a9adf2e3c50a79a2581012e18cc4d787c49335020b57e2",
+                                             "file_hash":  "sha256:fff69778f35b45820c811ee8e783d56ac9f549a6c5a305386ab1fe80a96b2c6a",
                                              "download_url":  "plugins/tinaide.linux-environment/1.0.0/tinaide.linux-environment.tinaplug",
                                              "changelog":  "Publish Linux environment plugin metadata from the standalone Registry.",
                                              "created_at":  "2026-06-01T00:00:00Z"
@@ -128,7 +128,7 @@
                                              "version":  "1.0.3",
                                              "version_code":  10003,
                                              "file_size":  1841917,
-                                             "file_hash":  "sha256:6976434560095e94d01a4debe4e610f0e85a3f0e27bfdc34f5229f6fac9b2da3",
+                                             "file_hash":  "sha256:8513b3f64467aa591b00a70b6dd99bb32ef21bd95f23a2d065830444594d0e66",
                                              "download_url":  "plugins/tinaide.apk-export.terminal/1.0.3/tinaide.apk-export.terminal.tinaplug",
                                              "changelog":  "Move terminal APK export plugin and template APK into TinaIDE Registry.",
                                              "created_at":  "2026-06-01T00:00:00Z"

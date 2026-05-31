@@ -12,6 +12,47 @@ $templates = @(
     @{ Name = "lsp-basic"; Output = "tina-lsp-plugin.zip" }
 )
 
+function New-DeterministicZip {
+    param(
+        [Parameter(Mandatory = $true)][string]$SourceDir,
+        [Parameter(Mandatory = $true)][string]$OutputFile
+    )
+
+    Add-Type -AssemblyName System.IO.Compression
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+    if (Test-Path -LiteralPath $OutputFile) {
+        Remove-Item -LiteralPath $OutputFile -Force
+    }
+
+    $sourcePath = (Resolve-Path -LiteralPath $SourceDir).Path
+    $sourceUri = [Uri]($sourcePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar)
+    $fixedTime = [DateTimeOffset]::new(2020, 1, 1, 0, 0, 0, [TimeSpan]::Zero)
+    $zip = [System.IO.Compression.ZipFile]::Open($OutputFile, [System.IO.Compression.ZipArchiveMode]::Create)
+    try {
+        Get-ChildItem -LiteralPath $sourcePath -File -Recurse -Force |
+            Sort-Object FullName |
+            ForEach-Object {
+                $relativePath = [Uri]::UnescapeDataString($sourceUri.MakeRelativeUri([Uri]$_.FullName).ToString())
+                $entry = $zip.CreateEntry($relativePath, [System.IO.Compression.CompressionLevel]::Optimal)
+                $entry.LastWriteTime = $fixedTime
+                $entryStream = $entry.Open()
+                try {
+                    $fileStream = [System.IO.File]::OpenRead($_.FullName)
+                    try {
+                        $fileStream.CopyTo($entryStream)
+                    } finally {
+                        $fileStream.Dispose()
+                    }
+                } finally {
+                    $entryStream.Dispose()
+                }
+            }
+    } finally {
+        $zip.Dispose()
+    }
+}
+
 New-Item -ItemType Directory -Force -Path $outputRoot | Out-Null
 if (Test-Path $stagingRoot) {
     Remove-Item $stagingRoot -Recurse -Force
@@ -46,11 +87,7 @@ foreach ($template in $templates) {
     Copy-Item (Join-Path $sharedRoot "validate_core.py") -Destination $starterSupportDir -Force
     Copy-Item (Join-Path $sharedRoot "validation-rules.json") -Destination $starterSupportDir -Force
 
-    if (Test-Path $outputZip) {
-        Remove-Item $outputZip -Force
-    }
-
-    Compress-Archive -Path (Join-Path $stagingDir "*") -DestinationPath $outputZip
+    New-DeterministicZip -SourceDir $stagingDir -OutputFile $outputZip
     Write-Host "Built $outputZip"
 }
 
