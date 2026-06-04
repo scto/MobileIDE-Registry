@@ -38,6 +38,81 @@
         "is_latest": true,
         "release_notes": "Initial Registry-hosted Dear ImGui source package."
       }
+    },
+    {
+      "id": "nlohmann-json",
+      "name": "JSON for Modern C++",
+      "description": "JSON for Modern C++ single-header library",
+      "category": "library",
+      "homepage": "https://github.com/nlohmann/json",
+      "file": "packages/nlohmann-json/3.12.0/nlohmann-json.tar.xz",
+      "android": {
+        "version": "3.12.0",
+        "artifact_type": "header",
+        "install_type": "download",
+        "is_latest": true,
+        "release_notes": "Initial Registry-hosted JSON for Modern C++ header package."
+      }
+    },
+    {
+      "id": "glm",
+      "name": "GLM",
+      "description": "OpenGL Mathematics header-only C++ mathematics library",
+      "category": "library",
+      "homepage": "https://github.com/g-truc/glm",
+      "file": "packages/glm/1.0.3/glm.tar.xz",
+      "android": {
+        "version": "1.0.3",
+        "artifact_type": "header",
+        "install_type": "download",
+        "is_latest": true,
+        "release_notes": "Initial Registry-hosted GLM header package."
+      }
+    },
+    {
+      "id": "stb",
+      "name": "stb",
+      "description": "Single-file public domain C/C++ libraries",
+      "category": "library",
+      "homepage": "https://github.com/nothings/stb",
+      "file": "packages/stb/2026.04.15/stb.tar.xz",
+      "android": {
+        "version": "2026.04.15",
+        "artifact_type": "header",
+        "install_type": "download",
+        "is_latest": true,
+        "release_notes": "Initial Registry-hosted stb header package."
+      }
+    },
+    {
+      "id": "fmt",
+      "name": "fmt",
+      "description": "Modern formatting library for C++",
+      "category": "library",
+      "homepage": "https://github.com/fmtlib/fmt",
+      "file": "packages/fmt/12.1.0/fmt.tar.xz",
+      "android": {
+        "version": "12.1.0",
+        "artifact_type": "source",
+        "install_type": "download",
+        "is_latest": true,
+        "release_notes": "Initial Registry-hosted fmt source package."
+      }
+    },
+    {
+      "id": "tinyxml2",
+      "name": "TinyXML-2",
+      "description": "Simple, small C++ XML parser",
+      "category": "library",
+      "homepage": "https://github.com/leethomason/tinyxml2",
+      "file": "packages/tinyxml2/11.0.0/tinyxml2.tar.xz",
+      "android": {
+        "version": "11.0.0",
+        "artifact_type": "source",
+        "install_type": "download",
+        "is_latest": true,
+        "release_notes": "Initial Registry-hosted TinyXML-2 source package."
+      }
     }
   ]
 }
