@@ -54,6 +54,24 @@ function Get-Crc32 {
     return [uint32](([uint64]$value -bxor $mask) -band $mask)
 }
 
+function Read-ArchiveEntryBytes {
+    param([Parameter(Mandatory = $true)][System.IO.FileInfo]$File)
+
+    $textExtensions = @(
+        ".json", ".md", ".txt", ".ps1", ".sh", ".lua", ".xml", ".properties",
+        ".gradle", ".kts", ".kt", ".java", ".c", ".cpp", ".h", ".hpp", ".cmake",
+        ".pc"
+    )
+
+    if ($File.Extension.ToLowerInvariant() -in $textExtensions) {
+        $text = [System.IO.File]::ReadAllText($File.FullName, [System.Text.Encoding]::UTF8)
+        $normalized = $text -replace "`r`n", "`n" -replace "`r", "`n"
+        return [System.Text.Encoding]::UTF8.GetBytes($normalized)
+    }
+
+    return [System.IO.File]::ReadAllBytes($File.FullName)
+}
+
 function New-DeterministicZip {
     param(
         [Parameter(Mandatory = $true)][string]$SourceDir,
@@ -87,7 +105,7 @@ function New-DeterministicZip {
     $utf8Flag = [uint16]0x0800
     try {
         foreach ($entry in $entries) {
-            $data = [System.IO.File]::ReadAllBytes($entry.File.FullName)
+            $data = Read-ArchiveEntryBytes -File $entry.File
             $nameBytes = [System.Text.Encoding]::UTF8.GetBytes($entry.RelativePath)
             $crc = Get-Crc32 -Bytes $data
             $size = [uint32]$data.Length
@@ -104,8 +122,8 @@ function New-DeterministicZip {
             $writer.Write($size)
             $writer.Write([uint16]$nameBytes.Length)
             $writer.Write([uint16]0)
-            $writer.Write($nameBytes)
-            $writer.Write($data)
+            $writer.Write([byte[]]$nameBytes)
+            $writer.Write([byte[]]$data)
 
             $centralRecords += [pscustomobject]@{
                 NameBytes = $nameBytes

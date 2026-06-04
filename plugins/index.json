@@ -151,8 +151,8 @@
         {
           "version": "1.0.1",
           "version_code": 10001,
-          "file_size": 3047,
-          "file_hash": "sha256:49b71b3fc9aa3251309a031b3dc012134aa249decfe3ff8ae0702fe0233d2677",
+          "file_size": 3008,
+          "file_hash": "sha256:477b7f8c14644542e0a051478deceeb4175fbef2f95270a5436ab48d8fa82cf6",
           "download_url": "plugins/tinaide.template.sdl3/1.0.1/tinaide.template.sdl3.tinaplug",
           "changelog": "Publish the SDL3 project template as a Registry plugin.",
           "created_at": "2026-06-03T00:00:00Z"
