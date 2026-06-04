@@ -51,6 +51,74 @@ function ConvertTo-IsoDateText {
     return [string]$Value
 }
 
+function Get-OptionalString {
+    param($Value)
+
+    if ($null -eq $Value) {
+        return $null
+    }
+
+    $text = [string]$Value
+    if ([string]::IsNullOrWhiteSpace($text)) {
+        return $null
+    }
+
+    return $text
+}
+
+function Get-StringArrayOrNull {
+    param($Value)
+
+    if ($null -eq $Value) {
+        return $null
+    }
+
+    $items = @($Value) |
+        ForEach-Object { [string]$_ } |
+        ForEach-Object { $_.Trim() } |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+
+    if ($items.Count -eq 0) {
+        return $null
+    }
+
+    return ,@($items)
+}
+
+function Add-OptionalField {
+    param(
+        [Parameter(Mandatory = $true)]$Target,
+        [Parameter(Mandatory = $true)][string]$Name,
+        $Value
+    )
+
+    if ($null -eq $Value) {
+        return
+    }
+    if ($Value -is [array] -and $Value.Count -eq 0) {
+        return
+    }
+    if ($Value -is [string] -and [string]::IsNullOrWhiteSpace($Value)) {
+        return
+    }
+
+    $Target[$Name] = $Value
+}
+
+function Get-PackageArtifactType {
+    param(
+        $AndroidPackage,
+        [Parameter(Mandatory = $true)][string]$PackageId
+    )
+
+    $artifactType = Get-OptionalString $AndroidPackage.artifact_type
+    if ($null -ne $artifactType) {
+        return $artifactType
+    }
+
+    throw "Android package metadata missing artifact_type: $PackageId"
+}
+
 function ConvertTo-JsonText {
     param([Parameter(Mandatory = $true)]$Value)
 
@@ -343,39 +411,47 @@ foreach ($pkg in @($packageMetadata.packages)) {
 
     $file = Get-Item -LiteralPath $filePath
     $checksum = "sha256:{0}" -f (Get-FileSha256 $file.FullName)
+    $artifactType = Get-PackageArtifactType -AndroidPackage $pkg.android -PackageId ([string]$pkg.id)
+    $androidAbi = Get-StringArrayOrNull $pkg.android.abi
+
+    $androidEntry = [ordered]@{
+        version = [string]$pkg.android.version
+        artifact_type = $artifactType
+        install_type = [string]$pkg.android.install_type
+        size = $file.Length
+        download_url = [string]$pkg.file
+        checksum = $checksum
+        is_latest = [bool]$pkg.android.is_latest
+        release_notes = [string]$pkg.android.release_notes
+    }
+    Add-OptionalField -Target $androidEntry -Name "abi" -Value $androidAbi
+
     $packageEntries += [ordered]@{
         id = [string]$pkg.id
         name = [string]$pkg.name
         description = [string]$pkg.description
         category = [string]$pkg.category
         homepage = [string]$pkg.homepage
-        android = [ordered]@{
-            version = [string]$pkg.android.version
-            install_type = [string]$pkg.android.install_type
-            size = $file.Length
-            download_url = [string]$pkg.file
-            checksum = $checksum
-            abi = @($pkg.android.abi)
-            is_latest = [bool]$pkg.android.is_latest
-            release_notes = [string]$pkg.android.release_notes
-        }
+        android = $androidEntry
     }
+
+    $androidVersionEntry = [ordered]@{
+        id = 2
+        package_id = [string]$pkg.id
+        platform = "android"
+        version = [string]$pkg.android.version
+        artifact_type = $artifactType
+        install_type = [string]$pkg.android.install_type
+        download_size = $file.Length
+        download_url = [string]$pkg.file
+        checksum = $checksum
+        is_latest = [bool]$pkg.android.is_latest
+        release_notes = [string]$pkg.android.release_notes
+    }
+    Add-OptionalField -Target $androidVersionEntry -Name "abi" -Value $androidAbi
+
     $versionMap[[string]$pkg.id] = [ordered]@{
-        android = @(
-            [ordered]@{
-                id = 2
-                package_id = [string]$pkg.id
-                platform = "android"
-                version = [string]$pkg.android.version
-                install_type = [string]$pkg.android.install_type
-                download_size = $file.Length
-                download_url = [string]$pkg.file
-                checksum = $checksum
-                abi = @($pkg.android.abi)
-                is_latest = [bool]$pkg.android.is_latest
-                release_notes = [string]$pkg.android.release_notes
-            }
-        )
+        android = @($androidVersionEntry)
     }
 }
 

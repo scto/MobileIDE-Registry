@@ -56,6 +56,65 @@ function Assert-UniqueValues {
         -Message ("Duplicate {0}: {1}" -f $Name, ($duplicates -join ", "))
 }
 
+function Get-StringArrayOrNull {
+    param($Value)
+
+    if ($null -eq $Value) {
+        return $null
+    }
+
+    $items = @($Value) |
+        ForEach-Object { [string]$_ } |
+        ForEach-Object { $_.Trim() } |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+
+    if ($items.Count -eq 0) {
+        return $null
+    }
+
+    return ,@($items)
+}
+
+function Assert-AndroidArtifactMetadata {
+    param(
+        [Parameter(Mandatory = $true)]$AndroidPackage,
+        [Parameter(Mandatory = $true)][string]$PackageId
+    )
+
+    $validArtifactTypes = @("source", "header", "static", "shared", "executable", "mixed")
+    $validAbis = @("arm64-v8a", "x86_64", "armeabi-v7a", "x86")
+    $artifactType = ([string]$AndroidPackage.artifact_type).Trim()
+    $abiValues = Get-StringArrayOrNull $AndroidPackage.abi
+
+    Assert-RegistryCondition `
+        -Condition (-not [string]::IsNullOrWhiteSpace($artifactType)) `
+        -Message "Android package missing artifact_type: $PackageId"
+    Assert-RegistryCondition `
+        -Condition ($artifactType -in $validArtifactTypes) `
+        -Message "Invalid artifact_type for ${PackageId}: $artifactType"
+
+    if ($null -ne $abiValues) {
+        Assert-UniqueValues -Values $abiValues -Name "ABI for $PackageId"
+        foreach ($abi in $abiValues) {
+            Assert-RegistryCondition `
+                -Condition ($abi -in $validAbis) `
+                -Message "Invalid ABI for ${PackageId}: $abi"
+        }
+    }
+
+    if ($artifactType -in @("source", "header")) {
+        Assert-RegistryCondition `
+            -Condition ($null -eq $abiValues) `
+            -Message "ABI-independent package must not declare abi: $PackageId"
+    }
+
+    if ($artifactType -in @("static", "shared", "executable")) {
+        Assert-RegistryCondition `
+            -Condition ($null -ne $abiValues -and $abiValues.Count -gt 0) `
+            -Message "Binary Android package must declare abi: $PackageId"
+    }
+}
+
 function Assert-FileDigest {
     param(
         [Parameter(Mandatory = $true)][string]$Path,
@@ -130,13 +189,17 @@ foreach ($plugin in $plugins) {
 
 foreach ($package in $packages) {
     Assert-RegistryCondition -Condition (-not [string]::IsNullOrWhiteSpace([string]$package.id)) -Message "Package id is blank"
-    if ($null -ne $package.android -and -not [string]::IsNullOrWhiteSpace([string]$package.android.download_url)) {
-        $downloadPath = Resolve-RegistryFile -UrlOrPath ([string]$package.android.download_url)
-        if ($null -ne $downloadPath) {
-            Assert-FileDigest `
-                -Path $downloadPath `
-                -ExpectedSize ([long]$package.android.size) `
-                -ExpectedHash ([string]$package.android.checksum)
+    if ($null -ne $package.android) {
+        Assert-AndroidArtifactMetadata -AndroidPackage $package.android -PackageId ([string]$package.id)
+
+        if (-not [string]::IsNullOrWhiteSpace([string]$package.android.download_url)) {
+            $downloadPath = Resolve-RegistryFile -UrlOrPath ([string]$package.android.download_url)
+            if ($null -ne $downloadPath) {
+                Assert-FileDigest `
+                    -Path $downloadPath `
+                    -ExpectedSize ([long]$package.android.size) `
+                    -ExpectedHash ([string]$package.android.checksum)
+            }
         }
     }
 }
@@ -153,6 +216,10 @@ if ($null -ne $packagesIndex.versions) {
 }
 
 foreach ($version in $versionEntries) {
+    if ([string]$version.platform -eq "android") {
+        Assert-AndroidArtifactMetadata -AndroidPackage $version -PackageId ([string]$version.package_id)
+    }
+
     if (-not [string]::IsNullOrWhiteSpace([string]$version.download_url)) {
         $downloadPath = Resolve-RegistryFile -UrlOrPath ([string]$version.download_url)
         if ($null -ne $downloadPath) {

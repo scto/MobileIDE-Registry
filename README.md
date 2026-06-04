@@ -1,5 +1,16 @@
 # TinaIDE Registry
 
+## Android 包产物规则
+
+Android 依赖包按“一个库一个逻辑包”发布，不拆成 `-arm64` / `-x86_64`
+这类不同包 ID。包内容和设备兼容性通过元数据表达：
+
+- `artifact_type` 可取 `source`、`header`、`static`、`shared`、`executable`、`mixed`。
+- `source` 和 `header` 包不能声明 `abi`。
+- `static`、`shared`、`executable` 包必须声明 `abi`。
+- 单个包可以同时包含多个 ABI 目录，例如 `lib/arm64-v8a/` 和 `lib/x86_64/`。
+- Android 客户端会在下载前拦截不匹配当前设备的 `abi`。
+
 TinaIDE 插件市场和依赖包市场的公开 Registry。
 
 客户端默认按顺序读取：

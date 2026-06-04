@@ -16,15 +16,16 @@
       "homepage": "https://www.libsdl.org/",
       "android": {
         "version": "3.5.0",
+        "artifact_type": "shared",
         "install_type": "download",
-        "size": 1239536,
+        "size": 1238164,
         "download_url": "packages/sdl3/3.5.0/sdl3.tar.xz",
-        "checksum": "sha256:73a36ccd6a0dc6f7e358a5e92c68e57a3d6dabf217f782aeb87baa7a3460c67f",
+        "checksum": "sha256:85da83990021ff9d890781eb1f42abe9ee2668ba56b049d15a39295b7ee356e6",
+        "is_latest": true,
+        "release_notes": "Initial Registry-hosted SDL3 Android package.",
         "abi": [
           "arm64-v8a"
-        ],
-        "is_latest": true,
-        "release_notes": "Initial Registry-hosted SDL3 Android package."
+        ]
       }
     }
   ],
@@ -36,15 +37,16 @@
           "package_id": "sdl3",
           "platform": "android",
           "version": "3.5.0",
+          "artifact_type": "shared",
           "install_type": "download",
-          "download_size": 1239536,
+          "download_size": 1238164,
           "download_url": "packages/sdl3/3.5.0/sdl3.tar.xz",
-          "checksum": "sha256:73a36ccd6a0dc6f7e358a5e92c68e57a3d6dabf217f782aeb87baa7a3460c67f",
+          "checksum": "sha256:85da83990021ff9d890781eb1f42abe9ee2668ba56b049d15a39295b7ee356e6",
+          "is_latest": true,
+          "release_notes": "Initial Registry-hosted SDL3 Android package.",
           "abi": [
             "arm64-v8a"
-          ],
-          "is_latest": true,
-          "release_notes": "Initial Registry-hosted SDL3 Android package."
+          ]
         }
       ]
     }

@@ -17,6 +17,7 @@
       "file": "packages/sdl3/3.5.0/sdl3.tar.xz",
       "android": {
         "version": "3.5.0",
+        "artifact_type": "shared",
         "install_type": "download",
         "abi": ["arm64-v8a"],
         "is_latest": true,
