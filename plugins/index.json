@@ -23,17 +23,14 @@
           "version": "1.0.1",
           "version_code": 10001,
           "file_size": 52554,
-          "file_hash": "sha256:89bce14c02c68eb96252becf335fd0b5c13d4feee2cb62ab7728826b7f23a952",
+          "file_hash": "sha256:46dfe9be16067ff0b44b82e41280c828d3a21484503be2f36dbdaea5103f1b15",
           "download_url": "plugins/tinaide.plugin.starters/1.0.1/tinaide.plugin.starters.tinaplug",
           "changelog": "Move official plugin starter templates into TinaIDE Registry.",
-          "created_at": "06/01/2026 00:00:00"
+          "created_at": "2026-06-01T00:00:00Z"
         }
       ],
-      "download_count": 0,
-      "rating_avg": 0.0,
-      "rating_count": 0,
-      "created_at": "05/21/2026 00:00:00",
-      "updated_at": "06/01/2026 00:00:00"
+      "created_at": "2026-05-21T00:00:00Z",
+      "updated_at": "2026-06-01T00:00:00Z"
     },
     {
       "id": "tinaide.lsp.python",
@@ -58,17 +55,14 @@
           "version": "1.0.0",
           "version_code": 10000,
           "file_size": 727,
-          "file_hash": "sha256:b37fcf1c5c0fd3f41055b409d0538b9e2865ffb7cee5922f16e841f107d67779",
+          "file_hash": "sha256:3dfba2325cd54b4c5d3770e97a9cb87dc52579c3ba51516f4e219285ab8dacb6",
           "download_url": "plugins/tinaide.lsp.python/1.0.0/tinaide.lsp.python.tinaplug",
           "changelog": "Publish Python LSP plugin from the standalone Registry.",
-          "created_at": "06/01/2026 00:00:00"
+          "created_at": "2026-06-01T00:00:00Z"
         }
       ],
-      "download_count": 0,
-      "rating_avg": 0.0,
-      "rating_count": 0,
-      "created_at": "05/21/2026 00:00:00",
-      "updated_at": "06/01/2026 00:00:00"
+      "created_at": "2026-05-21T00:00:00Z",
+      "updated_at": "2026-06-01T00:00:00Z"
     },
     {
       "id": "tinaide.linux-environment",
@@ -93,17 +87,14 @@
           "version": "1.0.0",
           "version_code": 10000,
           "file_size": 323,
-          "file_hash": "sha256:ff4d641b1265762f9297ff100fb34d840bc9f78818323f3c48f36e6515e70f7c",
+          "file_hash": "sha256:8c50e501cc47369957b534ea3723c975df9b241b0badbb177affde4869ee9ba7",
           "download_url": "plugins/tinaide.linux-environment/1.0.0/tinaide.linux-environment.tinaplug",
           "changelog": "Publish Linux environment plugin metadata from the standalone Registry.",
-          "created_at": "06/01/2026 00:00:00"
+          "created_at": "2026-06-01T00:00:00Z"
         }
       ],
-      "download_count": 0,
-      "rating_avg": 0.0,
-      "rating_count": 0,
-      "created_at": "05/21/2026 00:00:00",
-      "updated_at": "06/01/2026 00:00:00"
+      "created_at": "2026-05-21T00:00:00Z",
+      "updated_at": "2026-06-01T00:00:00Z"
     },
     {
       "id": "tinaide.apk-export.terminal",
@@ -128,17 +119,47 @@
           "version": "1.0.3",
           "version_code": 10003,
           "file_size": 1841907,
-          "file_hash": "sha256:cc4069700858edd15bad8f600d590ab178e78bb11f6f3051b6dd24671d5433c5",
+          "file_hash": "sha256:f0c303a81214b0e34a881525c88b39cd547a0c05f1c15a461cc40c9f17f1d049",
           "download_url": "plugins/tinaide.apk-export.terminal/1.0.3/tinaide.apk-export.terminal.tinaplug",
           "changelog": "Move terminal APK export plugin and template APK into TinaIDE Registry.",
-          "created_at": "06/01/2026 00:00:00"
+          "created_at": "2026-06-01T00:00:00Z"
         }
       ],
-      "download_count": 0,
-      "rating_avg": 0.0,
-      "rating_count": 0,
-      "created_at": "05/21/2026 00:00:00",
-      "updated_at": "06/01/2026 00:00:00"
+      "created_at": "2026-05-21T00:00:00Z",
+      "updated_at": "2026-06-01T00:00:00Z"
+    },
+    {
+      "id": "tinaide.template.sdl3",
+      "plugin_id": "tinaide.template.sdl3",
+      "name": "SDL3 Project Template",
+      "description": "Adds an SDL3 + CMake project template to New Project.",
+      "category": "template",
+      "tags": [
+        "sdl3",
+        "template",
+        "cmake",
+        "cpp"
+      ],
+      "repository_url": "https://github.com/wuxianggujun/TinaIDE-Registry/tree/main/sources/plugins/tinaide.template.sdl3",
+      "homepage_url": "https://github.com/wuxianggujun/TinaIDE-Registry",
+      "license": "Apache-2.0",
+      "publisher": {
+        "id": "tinaide",
+        "display_name": "TinaIDE"
+      },
+      "versions": [
+        {
+          "version": "1.0.1",
+          "version_code": 10001,
+          "file_size": 2537,
+          "file_hash": "sha256:51553f32a5dd6cd4c510db6908cf9ac40a3bea2ab80a19de55e12052095a2cb3",
+          "download_url": "plugins/tinaide.template.sdl3/1.0.1/tinaide.template.sdl3.tinaplug",
+          "changelog": "Publish the SDL3 project template as a Registry plugin.",
+          "created_at": "2026-06-03T00:00:00Z"
+        }
+      ],
+      "created_at": "2026-06-03T00:00:00Z",
+      "updated_at": "2026-06-03T00:00:00Z"
     }
   ]
 }

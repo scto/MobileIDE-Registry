@@ -154,9 +154,6 @@ foreach ($item in @($pluginMetadata.plugins)) {
                 created_at = [string]$item.updated_at
             }
         )
-        download_count = [long]$item.download_count
-        rating_avg = [double]$item.rating_avg
-        rating_count = [int]$item.rating_count
         created_at = [string]$item.created_at
         updated_at = [string]$item.updated_at
     }
