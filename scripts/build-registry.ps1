@@ -41,6 +41,16 @@ function ConvertTo-VersionCode {
     return ($major * 10000) + ($minor * 100) + $patch
 }
 
+function ConvertTo-IsoDateText {
+    param([Parameter(Mandatory = $true)]$Value)
+
+    if ($Value -is [datetime]) {
+        return $Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", [System.Globalization.CultureInfo]::InvariantCulture)
+    }
+
+    return [string]$Value
+}
+
 function ConvertTo-JsonText {
     param([Parameter(Mandatory = $true)]$Value)
 
@@ -305,11 +315,11 @@ foreach ($item in @($pluginMetadata.plugins)) {
                 file_hash = "sha256:{0}" -f (Get-FileSha256 $archive.FullName)
                 download_url = "plugins/{0}/{1}/{0}.tinaplug" -f $pluginId, $version
                 changelog = [string]$item.changelog
-                created_at = [string]$item.updated_at
+                created_at = ConvertTo-IsoDateText $item.updated_at
             }
         )
-        created_at = [string]$item.created_at
-        updated_at = [string]$item.updated_at
+        created_at = ConvertTo-IsoDateText $item.created_at
+        updated_at = ConvertTo-IsoDateText $item.updated_at
     }
 }
 
