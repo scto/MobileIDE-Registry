@@ -44,7 +44,57 @@ function ConvertTo-VersionCode {
 function ConvertTo-JsonText {
     param([Parameter(Mandatory = $true)]$Value)
 
-    return ($Value | ConvertTo-Json -Depth 32)
+    $json = $Value | ConvertTo-Json -Depth 32 -Compress
+    $builder = [System.Text.StringBuilder]::new()
+    $indent = 0
+    $inString = $false
+    $escaped = $false
+
+    foreach ($char in $json.ToCharArray()) {
+        if ($inString) {
+            [void]$builder.Append($char)
+            if ($escaped) {
+                $escaped = $false
+            } elseif ($char -eq '\') {
+                $escaped = $true
+            } elseif ($char -eq '"') {
+                $inString = $false
+            }
+            continue
+        }
+
+        switch ($char) {
+            '"' {
+                $inString = $true
+                [void]$builder.Append($char)
+            }
+            { $_ -eq '{' -or $_ -eq '[' } {
+                [void]$builder.Append($char)
+                [void]$builder.Append("`n")
+                $indent++
+                [void]$builder.Append((' ' * ($indent * 2)))
+            }
+            { $_ -eq '}' -or $_ -eq ']' } {
+                [void]$builder.Append("`n")
+                $indent--
+                [void]$builder.Append((' ' * ($indent * 2)))
+                [void]$builder.Append($char)
+            }
+            ',' {
+                [void]$builder.Append($char)
+                [void]$builder.Append("`n")
+                [void]$builder.Append((' ' * ($indent * 2)))
+            }
+            ':' {
+                [void]$builder.Append(": ")
+            }
+            default {
+                [void]$builder.Append($char)
+            }
+        }
+    }
+
+    return (($builder.ToString() -split "`n") | ForEach-Object { $_.TrimEnd() }) -join "`n"
 }
 
 function Get-ArchiveRelativePath {
@@ -82,7 +132,7 @@ function New-TinaPlugArchive {
             Sort-Object FullName |
             ForEach-Object {
                 $relativePath = Get-ArchiveRelativePath -BasePath $sourcePath -FilePath $_.FullName
-                $entry = $zip.CreateEntry($relativePath, [System.IO.Compression.CompressionLevel]::Optimal)
+                $entry = $zip.CreateEntry($relativePath, [System.IO.Compression.CompressionLevel]::NoCompression)
                 $entry.LastWriteTime = $fixedTime
                 $entry.ExternalAttributes = 0
                 $entryStream = $entry.Open()

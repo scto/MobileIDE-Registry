@@ -47,7 +47,7 @@ function New-DeterministicZip {
             Sort-Object FullName |
             ForEach-Object {
                 $relativePath = Get-ArchiveRelativePath -BasePath $sourcePath -FilePath $_.FullName
-                $entry = $zip.CreateEntry($relativePath, [System.IO.Compression.CompressionLevel]::Optimal)
+                $entry = $zip.CreateEntry($relativePath, [System.IO.Compression.CompressionLevel]::NoCompression)
                 $entry.LastWriteTime = $fixedTime
                 $entry.ExternalAttributes = 0
                 $entryStream = $entry.Open()
