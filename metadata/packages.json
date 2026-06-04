@@ -23,6 +23,21 @@
         "is_latest": true,
         "release_notes": "Initial Registry-hosted SDL3 Android package."
       }
+    },
+    {
+      "id": "imgui",
+      "name": "Dear ImGui",
+      "description": "Bloat-free graphical user interface library for C++",
+      "category": "library",
+      "homepage": "https://github.com/ocornut/imgui",
+      "file": "packages/imgui/1.92.6/imgui.tar.xz",
+      "android": {
+        "version": "1.92.6",
+        "artifact_type": "source",
+        "install_type": "download",
+        "is_latest": true,
+        "release_notes": "Initial Registry-hosted Dear ImGui source package."
+      }
     }
   ]
 }

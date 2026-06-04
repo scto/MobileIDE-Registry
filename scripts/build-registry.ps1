@@ -403,6 +403,7 @@ $packageMetadata = Get-Content -Raw -Encoding UTF8 (Join-Path $registryRoot "met
 
 $packageEntries = @()
 $versionMap = [ordered]@{}
+$packageVersionId = 1
 foreach ($pkg in @($packageMetadata.packages)) {
     $filePath = Join-Path $registryRoot $pkg.file
     if (-not (Test-Path -LiteralPath $filePath)) {
@@ -436,7 +437,7 @@ foreach ($pkg in @($packageMetadata.packages)) {
     }
 
     $androidVersionEntry = [ordered]@{
-        id = 2
+        id = $packageVersionId
         package_id = [string]$pkg.id
         platform = "android"
         version = [string]$pkg.android.version
@@ -453,6 +454,7 @@ foreach ($pkg in @($packageMetadata.packages)) {
     $versionMap[[string]$pkg.id] = [ordered]@{
         android = @($androidVersionEntry)
     }
+    $packageVersionId++
 }
 
 $packageCategories = @($packageMetadata.categories | ForEach-Object {
