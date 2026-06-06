@@ -1,0 +1,39 @@
+{
+  "package": {
+    "id": "stb",
+    "name": "stb",
+    "description": "Single-file public domain C/C++ libraries",
+    "category": "library",
+    "homepage": "https://github.com/nothings/stb",
+    "android": {
+      "version": "2026.04.15",
+      "artifact_type": "header",
+      "install_type": "download",
+      "size": 310016,
+      "download_url": "packages/stb/2026.04.15/stb.tar.xz",
+      "checksum": "sha256:1f0bce9dbbaf9058e47ad9e48426cff34325dcf1bb9e056169d49da03e90a513",
+      "is_latest": true,
+      "release_notes": "Initial Registry-hosted stb header package."
+    }
+  },
+  "versions": {
+    "android": [
+      {
+        "id": 5,
+        "package_id": "stb",
+        "platform": "android",
+        "version": "2026.04.15",
+        "artifact_type": "header",
+        "install_type": "download",
+        "download_size": 310016,
+        "download_url": "packages/stb/2026.04.15/stb.tar.xz",
+        "checksum": "sha256:1f0bce9dbbaf9058e47ad9e48426cff34325dcf1bb9e056169d49da03e90a513",
+        "is_latest": true,
+        "release_notes": "Initial Registry-hosted stb header package."
+      }
+    ]
+  },
+  "downloads": {
+
+  }
+}

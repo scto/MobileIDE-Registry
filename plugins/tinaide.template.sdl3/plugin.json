@@ -1,0 +1,33 @@
+{
+  "id": "tinaide.template.sdl3",
+  "plugin_id": "tinaide.template.sdl3",
+  "name": "SDL3 Project Template",
+  "description": "Adds an SDL3 + CMake project template to New Project.",
+  "category": "template",
+  "tags": [
+    "sdl3",
+    "template",
+    "cmake",
+    "cpp"
+  ],
+  "repository_url": "https://github.com/wuxianggujun/TinaIDE-Registry/tree/main/sources/plugins/tinaide.template.sdl3",
+  "homepage_url": "https://github.com/wuxianggujun/TinaIDE-Registry",
+  "license": "Apache-2.0",
+  "publisher": {
+    "id": "tinaide",
+    "display_name": "TinaIDE"
+  },
+  "versions": [
+    {
+      "version": "1.0.1",
+      "version_code": 10001,
+      "file_size": 3008,
+      "file_hash": "sha256:477b7f8c14644542e0a051478deceeb4175fbef2f95270a5436ab48d8fa82cf6",
+      "download_url": "plugins/tinaide.template.sdl3/1.0.1/tinaide.template.sdl3.tinaplug",
+      "changelog": "Publish the SDL3 project template as a Registry plugin.",
+      "created_at": "2026-06-03T00:00:00Z"
+    }
+  ],
+  "created_at": "2026-06-03T00:00:00Z",
+  "updated_at": "2026-06-03T00:00:00Z"
+}

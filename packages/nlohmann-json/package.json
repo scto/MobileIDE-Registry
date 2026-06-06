@@ -1,0 +1,39 @@
+{
+  "package": {
+    "id": "nlohmann-json",
+    "name": "JSON for Modern C++",
+    "description": "JSON for Modern C++ single-header library",
+    "category": "library",
+    "homepage": "https://github.com/nlohmann/json",
+    "android": {
+      "version": "3.12.0",
+      "artifact_type": "header",
+      "install_type": "download",
+      "size": 110984,
+      "download_url": "packages/nlohmann-json/3.12.0/nlohmann-json.tar.xz",
+      "checksum": "sha256:929cdffedd942d0f4133fced26491e1062f37eeed919869fd1424d76329cddc1",
+      "is_latest": true,
+      "release_notes": "Initial Registry-hosted JSON for Modern C++ header package."
+    }
+  },
+  "versions": {
+    "android": [
+      {
+        "id": 3,
+        "package_id": "nlohmann-json",
+        "platform": "android",
+        "version": "3.12.0",
+        "artifact_type": "header",
+        "install_type": "download",
+        "download_size": 110984,
+        "download_url": "packages/nlohmann-json/3.12.0/nlohmann-json.tar.xz",
+        "checksum": "sha256:929cdffedd942d0f4133fced26491e1062f37eeed919869fd1424d76329cddc1",
+        "is_latest": true,
+        "release_notes": "Initial Registry-hosted JSON for Modern C++ header package."
+      }
+    ]
+  },
+  "downloads": {
+
+  }
+}

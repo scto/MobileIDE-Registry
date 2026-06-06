@@ -51,8 +51,32 @@ New-Item -ItemType Directory -Force -Path $outputRoot | Out-Null
 
 $pluginsIndexPath = Join-Path $registryRoot "plugins/index.json"
 $packagesIndexPath = Join-Path $registryRoot "packages/index.json"
+$pluginsIndexV2Path = Join-Path $registryRoot "plugins/index.v2.json"
+$packagesIndexV2Path = Join-Path $registryRoot "packages/index.v2.json"
+Copy-ReleaseAsset -SourcePath $pluginsIndexV2Path -AssetName "plugins.index.v2.json"
+Copy-ReleaseAsset -SourcePath $packagesIndexV2Path -AssetName "packages.index.v2.json"
 Copy-ReleaseAsset -SourcePath $pluginsIndexPath -AssetName "plugins.index.json"
 Copy-ReleaseAsset -SourcePath $packagesIndexPath -AssetName "packages.index.json"
+
+$pluginCatalog = (Get-Content $pluginsIndexV2Path -Raw -Encoding UTF8 | ConvertFrom-Json).plugins
+foreach ($plugin in @($pluginCatalog)) {
+    $source = Resolve-RegistryFile -UrlOrPath ([string]$plugin.detail_url)
+    if ($null -eq $source) {
+        continue
+    }
+    $assetName = "plugins.{0}.plugin.json" -f $plugin.plugin_id
+    Copy-ReleaseAsset -SourcePath $source -AssetName $assetName
+}
+
+$packageCatalog = (Get-Content $packagesIndexV2Path -Raw -Encoding UTF8 | ConvertFrom-Json).packages
+foreach ($package in @($packageCatalog)) {
+    $source = Resolve-RegistryFile -UrlOrPath ([string]$package.detail_url)
+    if ($null -eq $source) {
+        continue
+    }
+    $assetName = "packages.{0}.package.json" -f $package.id
+    Copy-ReleaseAsset -SourcePath $source -AssetName $assetName
+}
 
 $plugins = (Get-Content $pluginsIndexPath -Raw -Encoding UTF8 | ConvertFrom-Json).plugins
 foreach ($plugin in @($plugins)) {

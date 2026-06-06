@@ -1,0 +1,32 @@
+{
+  "id": "tinaide.plugin.starters",
+  "plugin_id": "tinaide.plugin.starters",
+  "name": "TinaIDE Plugin Starters",
+  "description": "Starter templates for TinaIDE plugin development.",
+  "category": "development",
+  "tags": [
+    "starter",
+    "template",
+    "plugin"
+  ],
+  "repository_url": "https://github.com/wuxianggujun/TinaIDE-Registry/tree/main/sources/plugins/tinaide.plugin.starters",
+  "homepage_url": "https://github.com/wuxianggujun/TinaIDE-Registry",
+  "license": "Apache-2.0",
+  "publisher": {
+    "id": "tinaide",
+    "display_name": "TinaIDE"
+  },
+  "versions": [
+    {
+      "version": "1.0.1",
+      "version_code": 10001,
+      "file_size": 204963,
+      "file_hash": "sha256:a326571f191c702322c186b99caea18ba28f3ee6c4a39be946f1e9ce7186c61e",
+      "download_url": "plugins/tinaide.plugin.starters/1.0.1/tinaide.plugin.starters.tinaplug",
+      "changelog": "Move official plugin starter templates into TinaIDE Registry.",
+      "created_at": "2026-06-01T00:00:00Z"
+    }
+  ],
+  "created_at": "2026-05-21T00:00:00Z",
+  "updated_at": "2026-06-01T00:00:00Z"
+}

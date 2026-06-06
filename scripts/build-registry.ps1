@@ -344,6 +344,7 @@ $pluginMetadata = Get-Content -Raw -Encoding UTF8 (Join-Path $registryRoot "meta
     ConvertFrom-Json
 
 $pluginEntries = @()
+$pluginCatalogEntries = @()
 foreach ($item in @($pluginMetadata.plugins)) {
     $sourceDir = Join-Path $registryRoot $item.source
     $manifestPath = Join-Path $sourceDir "manifest.json"
@@ -361,7 +362,7 @@ foreach ($item in @($pluginMetadata.plugins)) {
     New-TinaPlugArchive -SourceDir $sourceDir -OutputFile $outputFile
 
     $archive = Get-Item -LiteralPath $outputFile
-    $pluginEntries += [ordered]@{
+    $pluginEntry = [ordered]@{
         id = $pluginId
         plugin_id = $pluginId
         name = [string]$manifest.name
@@ -389,7 +390,36 @@ foreach ($item in @($pluginMetadata.plugins)) {
         created_at = ConvertTo-IsoDateText $item.created_at
         updated_at = ConvertTo-IsoDateText $item.updated_at
     }
+    $pluginEntries += $pluginEntry
+    $pluginCatalogEntries += [ordered]@{
+        id = $pluginId
+        plugin_id = $pluginId
+        name = [string]$manifest.name
+        description = [string]$manifest.description
+        category = [string]$item.category
+        tags = @($item.tags)
+        publisher = [ordered]@{
+            id = [string]$item.publisher.id
+            display_name = [string]$item.publisher.display_name
+        }
+        latest_version = $version
+        detail_url = "plugins/{0}/plugin.json" -f $pluginId
+        created_at = ConvertTo-IsoDateText $item.created_at
+        updated_at = ConvertTo-IsoDateText $item.updated_at
+    }
+
+    Write-Utf8NoBom `
+        -Path (Join-Path $registryRoot ("plugins/{0}/plugin.json" -f $pluginId)) `
+        -Content (ConvertTo-JsonText $pluginEntry)
 }
+
+$pluginsIndexV2 = [ordered]@{
+    schema_version = 2
+    plugins = @($pluginCatalogEntries)
+}
+Write-Utf8NoBom `
+    -Path (Join-Path $registryRoot "plugins/index.v2.json") `
+    -Content (ConvertTo-JsonText $pluginsIndexV2)
 
 $pluginsIndex = [ordered]@{
     plugins = @($pluginEntries)
@@ -402,6 +432,7 @@ $packageMetadata = Get-Content -Raw -Encoding UTF8 (Join-Path $registryRoot "met
     ConvertFrom-Json
 
 $packageEntries = @()
+$packageCatalogEntries = @()
 $versionMap = [ordered]@{}
 $packageVersionId = 1
 foreach ($pkg in @($packageMetadata.packages)) {
@@ -427,7 +458,7 @@ foreach ($pkg in @($packageMetadata.packages)) {
     }
     Add-OptionalField -Target $androidEntry -Name "abi" -Value $androidAbi
 
-    $packageEntries += [ordered]@{
+    $packageEntry = [ordered]@{
         id = [string]$pkg.id
         name = [string]$pkg.name
         description = [string]$pkg.description
@@ -435,6 +466,7 @@ foreach ($pkg in @($packageMetadata.packages)) {
         homepage = [string]$pkg.homepage
         android = $androidEntry
     }
+    $packageEntries += $packageEntry
 
     $androidVersionEntry = [ordered]@{
         id = $packageVersionId
@@ -454,6 +486,35 @@ foreach ($pkg in @($packageMetadata.packages)) {
     $versionMap[[string]$pkg.id] = [ordered]@{
         android = @($androidVersionEntry)
     }
+
+    $androidCatalogEntry = [ordered]@{
+        version = [string]$pkg.android.version
+        artifact_type = $artifactType
+        install_type = [string]$pkg.android.install_type
+        size = $file.Length
+        is_latest = [bool]$pkg.android.is_latest
+    }
+    Add-OptionalField -Target $androidCatalogEntry -Name "abi" -Value $androidAbi
+
+    $packageCatalogEntries += [ordered]@{
+        id = [string]$pkg.id
+        name = [string]$pkg.name
+        description = [string]$pkg.description
+        category = [string]$pkg.category
+        homepage = [string]$pkg.homepage
+        detail_url = "packages/{0}/package.json" -f ([string]$pkg.id)
+        android = $androidCatalogEntry
+    }
+
+    $packageDetail = [ordered]@{
+        package = $packageEntry
+        versions = $versionMap[[string]$pkg.id]
+        downloads = [ordered]@{}
+    }
+    Write-Utf8NoBom `
+        -Path (Join-Path $registryRoot ("packages/{0}/package.json" -f ([string]$pkg.id))) `
+        -Content (ConvertTo-JsonText $packageDetail)
+
     $packageVersionId++
 }
 
@@ -465,6 +526,15 @@ $packageCategories = @($packageMetadata.categories | ForEach-Object {
         sort_order = [int]$_.sort_order
     }
 })
+
+$packagesIndexV2 = [ordered]@{
+    schema_version = 2
+    categories = @($packageCategories)
+    packages = @($packageCatalogEntries)
+}
+Write-Utf8NoBom `
+    -Path (Join-Path $registryRoot "packages/index.v2.json") `
+    -Content (ConvertTo-JsonText $packagesIndexV2)
 
 $packagesIndex = [ordered]@{
     categories = @($packageCategories)

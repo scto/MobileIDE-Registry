@@ -1,0 +1,32 @@
+{
+  "id": "tinaide.lsp.python",
+  "plugin_id": "tinaide.lsp.python",
+  "name": "Python Language Support",
+  "description": "Python language support with Python Language Server (pylsp)",
+  "category": "lsp",
+  "tags": [
+    "python",
+    "lsp",
+    "language-server"
+  ],
+  "repository_url": "https://github.com/wuxianggujun/TinaIDE-Registry/tree/main/sources/plugins/tinaide.lsp.python",
+  "homepage_url": "https://github.com/wuxianggujun/TinaIDE-Registry",
+  "license": "Apache-2.0",
+  "publisher": {
+    "id": "tinaide",
+    "display_name": "TinaIDE"
+  },
+  "versions": [
+    {
+      "version": "1.0.0",
+      "version_code": 10000,
+      "file_size": 2206,
+      "file_hash": "sha256:18dcec484fb0424f47b31762b36aa2c29b6ecb0f3ad479a57f0a4c26e3e5c4ac",
+      "download_url": "plugins/tinaide.lsp.python/1.0.0/tinaide.lsp.python.tinaplug",
+      "changelog": "Publish Python LSP plugin from the standalone Registry.",
+      "created_at": "2026-06-01T00:00:00Z"
+    }
+  ],
+  "created_at": "2026-05-21T00:00:00Z",
+  "updated_at": "2026-06-01T00:00:00Z"
+}

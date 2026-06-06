@@ -1,0 +1,45 @@
+{
+  "package": {
+    "id": "sdl3",
+    "name": "SDL3",
+    "description": "Simple DirectMedia Layer 3 - Cross-platform multimedia library",
+    "category": "library",
+    "homepage": "https://www.libsdl.org/",
+    "android": {
+      "version": "3.5.0",
+      "artifact_type": "shared",
+      "install_type": "download",
+      "size": 1238164,
+      "download_url": "packages/sdl3/3.5.0/sdl3.tar.xz",
+      "checksum": "sha256:85da83990021ff9d890781eb1f42abe9ee2668ba56b049d15a39295b7ee356e6",
+      "is_latest": true,
+      "release_notes": "Initial Registry-hosted SDL3 Android package.",
+      "abi": [
+        "arm64-v8a"
+      ]
+    }
+  },
+  "versions": {
+    "android": [
+      {
+        "id": 1,
+        "package_id": "sdl3",
+        "platform": "android",
+        "version": "3.5.0",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "download_size": 1238164,
+        "download_url": "packages/sdl3/3.5.0/sdl3.tar.xz",
+        "checksum": "sha256:85da83990021ff9d890781eb1f42abe9ee2668ba56b049d15a39295b7ee356e6",
+        "is_latest": true,
+        "release_notes": "Initial Registry-hosted SDL3 Android package.",
+        "abi": [
+          "arm64-v8a"
+        ]
+      }
+    ]
+  },
+  "downloads": {
+
+  }
+}

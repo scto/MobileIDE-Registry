@@ -1,0 +1,121 @@
+{
+  "schema_version": 2,
+  "categories": [
+    {
+      "id": "library",
+      "name": "Library",
+      "name_en": "Library",
+      "sort_order": 0
+    }
+  ],
+  "packages": [
+    {
+      "id": "sdl3",
+      "name": "SDL3",
+      "description": "Simple DirectMedia Layer 3 - Cross-platform multimedia library",
+      "category": "library",
+      "homepage": "https://www.libsdl.org/",
+      "detail_url": "packages/sdl3/package.json",
+      "android": {
+        "version": "3.5.0",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "size": 1238164,
+        "is_latest": true,
+        "abi": [
+          "arm64-v8a"
+        ]
+      }
+    },
+    {
+      "id": "imgui",
+      "name": "Dear ImGui",
+      "description": "Bloat-free graphical user interface library for C++",
+      "category": "library",
+      "homepage": "https://github.com/ocornut/imgui",
+      "detail_url": "packages/imgui/package.json",
+      "android": {
+        "version": "1.92.6",
+        "artifact_type": "source",
+        "install_type": "download",
+        "size": 680608,
+        "is_latest": true
+      }
+    },
+    {
+      "id": "nlohmann-json",
+      "name": "JSON for Modern C++",
+      "description": "JSON for Modern C++ single-header library",
+      "category": "library",
+      "homepage": "https://github.com/nlohmann/json",
+      "detail_url": "packages/nlohmann-json/package.json",
+      "android": {
+        "version": "3.12.0",
+        "artifact_type": "header",
+        "install_type": "download",
+        "size": 110984,
+        "is_latest": true
+      }
+    },
+    {
+      "id": "glm",
+      "name": "GLM",
+      "description": "OpenGL Mathematics header-only C++ mathematics library",
+      "category": "library",
+      "homepage": "https://github.com/g-truc/glm",
+      "detail_url": "packages/glm/package.json",
+      "android": {
+        "version": "1.0.3",
+        "artifact_type": "header",
+        "install_type": "download",
+        "size": 172592,
+        "is_latest": true
+      }
+    },
+    {
+      "id": "stb",
+      "name": "stb",
+      "description": "Single-file public domain C/C++ libraries",
+      "category": "library",
+      "homepage": "https://github.com/nothings/stb",
+      "detail_url": "packages/stb/package.json",
+      "android": {
+        "version": "2026.04.15",
+        "artifact_type": "header",
+        "install_type": "download",
+        "size": 310016,
+        "is_latest": true
+      }
+    },
+    {
+      "id": "fmt",
+      "name": "fmt",
+      "description": "Modern formatting library for C++",
+      "category": "library",
+      "homepage": "https://github.com/fmtlib/fmt",
+      "detail_url": "packages/fmt/package.json",
+      "android": {
+        "version": "12.1.0",
+        "artifact_type": "source",
+        "install_type": "download",
+        "size": 119320,
+        "is_latest": true
+      }
+    },
+    {
+      "id": "tinyxml2",
+      "name": "TinyXML-2",
+      "description": "Simple, small C++ XML parser",
+      "category": "library",
+      "homepage": "https://github.com/leethomason/tinyxml2",
+      "detail_url": "packages/tinyxml2/package.json",
+      "android": {
+        "version": "11.0.0",
+        "artifact_type": "source",
+        "install_type": "download",
+        "size": 29680,
+        "is_latest": true
+      }
+    }
+  ]
+}

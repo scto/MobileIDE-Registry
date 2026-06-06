@@ -1,0 +1,39 @@
+{
+  "package": {
+    "id": "glm",
+    "name": "GLM",
+    "description": "OpenGL Mathematics header-only C++ mathematics library",
+    "category": "library",
+    "homepage": "https://github.com/g-truc/glm",
+    "android": {
+      "version": "1.0.3",
+      "artifact_type": "header",
+      "install_type": "download",
+      "size": 172592,
+      "download_url": "packages/glm/1.0.3/glm.tar.xz",
+      "checksum": "sha256:f39370caa98ea62ba0dd18f49e29e71729debb754dd2ef47bc30e985fe10bebe",
+      "is_latest": true,
+      "release_notes": "Initial Registry-hosted GLM header package."
+    }
+  },
+  "versions": {
+    "android": [
+      {
+        "id": 4,
+        "package_id": "glm",
+        "platform": "android",
+        "version": "1.0.3",
+        "artifact_type": "header",
+        "install_type": "download",
+        "download_size": 172592,
+        "download_url": "packages/glm/1.0.3/glm.tar.xz",
+        "checksum": "sha256:f39370caa98ea62ba0dd18f49e29e71729debb754dd2ef47bc30e985fe10bebe",
+        "is_latest": true,
+        "release_notes": "Initial Registry-hosted GLM header package."
+      }
+    ]
+  },
+  "downloads": {
+
+  }
+}

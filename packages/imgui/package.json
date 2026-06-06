@@ -1,0 +1,39 @@
+{
+  "package": {
+    "id": "imgui",
+    "name": "Dear ImGui",
+    "description": "Bloat-free graphical user interface library for C++",
+    "category": "library",
+    "homepage": "https://github.com/ocornut/imgui",
+    "android": {
+      "version": "1.92.6",
+      "artifact_type": "source",
+      "install_type": "download",
+      "size": 680608,
+      "download_url": "packages/imgui/1.92.6/imgui.tar.xz",
+      "checksum": "sha256:e1970650be1ba0f4c17a4c2414e262a43a8164e4f2ba24a11c88f143765cea50",
+      "is_latest": true,
+      "release_notes": "Initial Registry-hosted Dear ImGui source package."
+    }
+  },
+  "versions": {
+    "android": [
+      {
+        "id": 2,
+        "package_id": "imgui",
+        "platform": "android",
+        "version": "1.92.6",
+        "artifact_type": "source",
+        "install_type": "download",
+        "download_size": 680608,
+        "download_url": "packages/imgui/1.92.6/imgui.tar.xz",
+        "checksum": "sha256:e1970650be1ba0f4c17a4c2414e262a43a8164e4f2ba24a11c88f143765cea50",
+        "is_latest": true,
+        "release_notes": "Initial Registry-hosted Dear ImGui source package."
+      }
+    ]
+  },
+  "downloads": {
+
+  }
+}

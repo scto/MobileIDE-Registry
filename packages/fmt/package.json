@@ -1,0 +1,39 @@
+{
+  "package": {
+    "id": "fmt",
+    "name": "fmt",
+    "description": "Modern formatting library for C++",
+    "category": "library",
+    "homepage": "https://github.com/fmtlib/fmt",
+    "android": {
+      "version": "12.1.0",
+      "artifact_type": "source",
+      "install_type": "download",
+      "size": 119320,
+      "download_url": "packages/fmt/12.1.0/fmt.tar.xz",
+      "checksum": "sha256:72b04c23a121850b574af737fb143ca2a4f9d2504cd9666e41074b8ebfb3ff75",
+      "is_latest": true,
+      "release_notes": "Initial Registry-hosted fmt source package."
+    }
+  },
+  "versions": {
+    "android": [
+      {
+        "id": 6,
+        "package_id": "fmt",
+        "platform": "android",
+        "version": "12.1.0",
+        "artifact_type": "source",
+        "install_type": "download",
+        "download_size": 119320,
+        "download_url": "packages/fmt/12.1.0/fmt.tar.xz",
+        "checksum": "sha256:72b04c23a121850b574af737fb143ca2a4f9d2504cd9666e41074b8ebfb3ff75",
+        "is_latest": true,
+        "release_notes": "Initial Registry-hosted fmt source package."
+      }
+    ]
+  },
+  "downloads": {
+
+  }
+}

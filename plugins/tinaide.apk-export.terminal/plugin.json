@@ -1,0 +1,32 @@
+{
+  "id": "tinaide.apk-export.terminal",
+  "plugin_id": "tinaide.apk-export.terminal",
+  "name": "Terminal APK Export",
+  "description": "Adds APK export support for terminal-style native executables.",
+  "category": "apk-export",
+  "tags": [
+    "apk",
+    "export",
+    "terminal"
+  ],
+  "repository_url": "https://github.com/wuxianggujun/TinaIDE-Registry/tree/main/sources/plugins/tinaide.apk-export.terminal",
+  "homepage_url": "https://github.com/wuxianggujun/TinaIDE-Registry",
+  "license": "Apache-2.0",
+  "publisher": {
+    "id": "tinaide",
+    "display_name": "TinaIDE"
+  },
+  "versions": [
+    {
+      "version": "1.0.3",
+      "version_code": 10003,
+      "file_size": 5291859,
+      "file_hash": "sha256:6f9ed95a890435e50b98c49b9f39e1fa4611ce24ab7fbdd7243f5b6866db5702",
+      "download_url": "plugins/tinaide.apk-export.terminal/1.0.3/tinaide.apk-export.terminal.tinaplug",
+      "changelog": "Move terminal APK export plugin and template APK into TinaIDE Registry.",
+      "created_at": "2026-06-01T00:00:00Z"
+    }
+  ],
+  "created_at": "2026-05-21T00:00:00Z",
+  "updated_at": "2026-06-01T00:00:00Z"
+}

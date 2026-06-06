@@ -35,6 +35,6 @@ jobs:
           $diff = git status --porcelain
           if (-not [string]::IsNullOrWhiteSpace(($diff -join "`n"))) {
             git status --short
-            git diff -- plugins/index.json packages/index.json
+            git diff -- plugins packages
             throw "Generated registry artifacts are stale. Run scripts/build-registry.ps1 and commit the result."
           }

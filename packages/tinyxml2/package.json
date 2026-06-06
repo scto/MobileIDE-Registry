@@ -1,0 +1,39 @@
+{
+  "package": {
+    "id": "tinyxml2",
+    "name": "TinyXML-2",
+    "description": "Simple, small C++ XML parser",
+    "category": "library",
+    "homepage": "https://github.com/leethomason/tinyxml2",
+    "android": {
+      "version": "11.0.0",
+      "artifact_type": "source",
+      "install_type": "download",
+      "size": 29680,
+      "download_url": "packages/tinyxml2/11.0.0/tinyxml2.tar.xz",
+      "checksum": "sha256:c04ae710cfdbe9ec28b5cf962701b41219c6cc280b2a3e3e459236d679c8211e",
+      "is_latest": true,
+      "release_notes": "Initial Registry-hosted TinyXML-2 source package."
+    }
+  },
+  "versions": {
+    "android": [
+      {
+        "id": 7,
+        "package_id": "tinyxml2",
+        "platform": "android",
+        "version": "11.0.0",
+        "artifact_type": "source",
+        "install_type": "download",
+        "download_size": 29680,
+        "download_url": "packages/tinyxml2/11.0.0/tinyxml2.tar.xz",
+        "checksum": "sha256:c04ae710cfdbe9ec28b5cf962701b41219c6cc280b2a3e3e459236d679c8211e",
+        "is_latest": true,
+        "release_notes": "Initial Registry-hosted TinyXML-2 source package."
+      }
+    ]
+  },
+  "downloads": {
+
+  }
+}

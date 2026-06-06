@@ -78,11 +78,10 @@ jobs:
         if: ${{ inputs.create_release }}
         shell: pwsh
         run: |
-          $plugins = (Get-Content plugins/index.json -Raw | ConvertFrom-Json).plugins
-          $packages = (Get-Content packages/index.json -Raw | ConvertFrom-Json).packages
+          $plugins = (Get-Content plugins/index.v2.json -Raw | ConvertFrom-Json).plugins
+          $packages = (Get-Content packages/index.v2.json -Raw | ConvertFrom-Json).packages
           $pluginLines = $plugins | ForEach-Object {
-            $latest = @($_.versions)[0]
-            "- plugin $($_.plugin_id) $($latest.version)"
+            "- plugin $($_.plugin_id) $($_.latest_version)"
           }
           $packageLines = $packages | ForEach-Object {
             "- package $($_.id) $($_.android.version)"
@@ -98,10 +97,14 @@ jobs:
             $packageLines,
             "",
             "Indexes:",
+            "- plugins/index.v2.json",
+            "- packages/index.v2.json",
+            "- plugins/<plugin-id>/plugin.json",
+            "- packages/<package-id>/package.json",
             "- plugins/index.json",
             "- packages/index.json",
             "",
-            "Release assets include individual plugin/package files. Do not use the auto-generated source code archives for marketplace downloads."
+            "Release assets include individual plugin/package files, v2 details, v2 indexes, and v1 compatibility indexes. Do not use the auto-generated source code archives for marketplace downloads."
           )
           $notes | Set-Content -Path release-notes.md -Encoding UTF8
 

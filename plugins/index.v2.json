@@ -1,0 +1,106 @@
+{
+  "schema_version": 2,
+  "plugins": [
+    {
+      "id": "tinaide.plugin.starters",
+      "plugin_id": "tinaide.plugin.starters",
+      "name": "TinaIDE Plugin Starters",
+      "description": "Starter templates for TinaIDE plugin development.",
+      "category": "development",
+      "tags": [
+        "starter",
+        "template",
+        "plugin"
+      ],
+      "publisher": {
+        "id": "tinaide",
+        "display_name": "TinaIDE"
+      },
+      "latest_version": "1.0.1",
+      "detail_url": "plugins/tinaide.plugin.starters/plugin.json",
+      "created_at": "2026-05-21T00:00:00Z",
+      "updated_at": "2026-06-01T00:00:00Z"
+    },
+    {
+      "id": "tinaide.lsp.python",
+      "plugin_id": "tinaide.lsp.python",
+      "name": "Python Language Support",
+      "description": "Python language support with Python Language Server (pylsp)",
+      "category": "lsp",
+      "tags": [
+        "python",
+        "lsp",
+        "language-server"
+      ],
+      "publisher": {
+        "id": "tinaide",
+        "display_name": "TinaIDE"
+      },
+      "latest_version": "1.0.0",
+      "detail_url": "plugins/tinaide.lsp.python/plugin.json",
+      "created_at": "2026-05-21T00:00:00Z",
+      "updated_at": "2026-06-01T00:00:00Z"
+    },
+    {
+      "id": "tinaide.linux-environment",
+      "plugin_id": "tinaide.linux-environment",
+      "name": "Linux Environment",
+      "description": "Provide Linux environment capability powered by PRoot.",
+      "category": "system",
+      "tags": [
+        "linux",
+        "proot",
+        "environment"
+      ],
+      "publisher": {
+        "id": "tinaide",
+        "display_name": "TinaIDE"
+      },
+      "latest_version": "1.0.0",
+      "detail_url": "plugins/tinaide.linux-environment/plugin.json",
+      "created_at": "2026-05-21T00:00:00Z",
+      "updated_at": "2026-06-01T00:00:00Z"
+    },
+    {
+      "id": "tinaide.apk-export.terminal",
+      "plugin_id": "tinaide.apk-export.terminal",
+      "name": "Terminal APK Export",
+      "description": "Adds APK export support for terminal-style native executables.",
+      "category": "apk-export",
+      "tags": [
+        "apk",
+        "export",
+        "terminal"
+      ],
+      "publisher": {
+        "id": "tinaide",
+        "display_name": "TinaIDE"
+      },
+      "latest_version": "1.0.3",
+      "detail_url": "plugins/tinaide.apk-export.terminal/plugin.json",
+      "created_at": "2026-05-21T00:00:00Z",
+      "updated_at": "2026-06-01T00:00:00Z"
+    },
+    {
+      "id": "tinaide.template.sdl3",
+      "plugin_id": "tinaide.template.sdl3",
+      "name": "SDL3 Project Template",
+      "description": "Adds an SDL3 + CMake project template to New Project.",
+      "category": "template",
+      "tags": [
+        "sdl3",
+        "template",
+        "cmake",
+        "cpp"
+      ],
+      "publisher": {
+        "id": "tinaide",
+        "display_name": "TinaIDE"
+      },
+      "latest_version": "1.0.1",
+      "detail_url": "plugins/tinaide.template.sdl3/plugin.json",
+      "created_at": "2026-06-03T00:00:00Z",
+      "updated_at": "2026-06-03T00:00:00Z"
+    }
+  ]
+}

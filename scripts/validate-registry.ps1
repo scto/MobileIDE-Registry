@@ -75,6 +75,15 @@ function Get-StringArrayOrNull {
     return ,@($items)
 }
 
+function Test-JsonProperty {
+    param(
+        [Parameter(Mandatory = $true)]$Object,
+        [Parameter(Mandatory = $true)][string]$Name
+    )
+
+    return $null -ne $Object.PSObject.Properties[$Name]
+}
+
 function Assert-AndroidArtifactMetadata {
     param(
         [Parameter(Mandatory = $true)]$AndroidPackage,
@@ -112,6 +121,31 @@ function Assert-AndroidArtifactMetadata {
         Assert-RegistryCondition `
             -Condition ($null -ne $abiValues -and $abiValues.Count -gt 0) `
             -Message "Binary Android package must declare abi: $PackageId"
+    }
+}
+
+function Assert-LightweightCatalogAndroidPackage {
+    param(
+        $AndroidPackage,
+        [Parameter(Mandatory = $true)][string]$PackageId
+    )
+
+    if ($null -eq $AndroidPackage) {
+        return
+    }
+
+    Assert-AndroidArtifactMetadata -AndroidPackage $AndroidPackage -PackageId $PackageId
+    $heavyFields = @(
+        "download_url",
+        "download_sources",
+        "checksum",
+        "dependencies",
+        "release_notes"
+    )
+    foreach ($field in $heavyFields) {
+        Assert-RegistryCondition `
+            -Condition (-not (Test-JsonProperty -Object $AndroidPackage -Name $field)) `
+            -Message "Package v2 catalog must not contain heavy field ${PackageId}.android.${field}"
     }
 }
 
@@ -159,18 +193,59 @@ if (-not $SkipBuild) {
 
 $pluginsIndexPath = Join-Path $registryRoot "plugins/index.json"
 $packagesIndexPath = Join-Path $registryRoot "packages/index.json"
+$pluginsIndexV2Path = Join-Path $registryRoot "plugins/index.v2.json"
+$packagesIndexV2Path = Join-Path $registryRoot "packages/index.v2.json"
 
 Assert-RegistryCondition -Condition (Test-Path -LiteralPath $pluginsIndexPath) -Message "Missing plugins/index.json"
 Assert-RegistryCondition -Condition (Test-Path -LiteralPath $packagesIndexPath) -Message "Missing packages/index.json"
+Assert-RegistryCondition -Condition (Test-Path -LiteralPath $pluginsIndexV2Path) -Message "Missing plugins/index.v2.json"
+Assert-RegistryCondition -Condition (Test-Path -LiteralPath $packagesIndexV2Path) -Message "Missing packages/index.v2.json"
 
 $pluginsIndex = Get-Content -Raw -Encoding UTF8 $pluginsIndexPath | ConvertFrom-Json
 $packagesIndex = Get-Content -Raw -Encoding UTF8 $packagesIndexPath | ConvertFrom-Json
+$pluginsIndexV2 = Get-Content -Raw -Encoding UTF8 $pluginsIndexV2Path | ConvertFrom-Json
+$packagesIndexV2 = Get-Content -Raw -Encoding UTF8 $packagesIndexV2Path | ConvertFrom-Json
 
 $plugins = @($pluginsIndex.plugins)
 $packages = @($packagesIndex.packages)
+$pluginCatalog = @($pluginsIndexV2.plugins)
+$packageCatalog = @($packagesIndexV2.packages)
 
+Assert-RegistryCondition -Condition ([int]$pluginsIndexV2.schema_version -eq 2) -Message "Invalid plugins/index.v2.json schema_version"
+Assert-RegistryCondition -Condition ([int]$packagesIndexV2.schema_version -eq 2) -Message "Invalid packages/index.v2.json schema_version"
+Assert-RegistryCondition -Condition ($pluginCatalog.Count -eq $plugins.Count) -Message "Plugin v2 catalog count does not match v1 index"
+Assert-RegistryCondition -Condition ($packageCatalog.Count -eq $packages.Count) -Message "Package v2 catalog count does not match v1 index"
 Assert-UniqueValues -Values @($plugins | ForEach-Object { $_.plugin_id }) -Name "plugin_id"
 Assert-UniqueValues -Values @($packages | ForEach-Object { $_.id }) -Name "package id"
+Assert-UniqueValues -Values @($pluginCatalog | ForEach-Object { $_.plugin_id }) -Name "plugin v2 plugin_id"
+Assert-UniqueValues -Values @($packageCatalog | ForEach-Object { $_.id }) -Name "package v2 id"
+
+foreach ($plugin in $pluginCatalog) {
+    Assert-RegistryCondition -Condition (-not [string]::IsNullOrWhiteSpace([string]$plugin.plugin_id)) -Message "Plugin v2 id is blank"
+    Assert-RegistryCondition -Condition (-not [string]::IsNullOrWhiteSpace([string]$plugin.detail_url)) -Message "Plugin v2 detail_url is blank: $($plugin.plugin_id)"
+
+    $detailPath = Resolve-RegistryFile -UrlOrPath ([string]$plugin.detail_url)
+    Assert-RegistryCondition -Condition ($null -ne $detailPath) -Message "Plugin v2 detail_url must be repository-relative: $($plugin.plugin_id)"
+    Assert-RegistryCondition -Condition (Test-Path -LiteralPath $detailPath -PathType Leaf) -Message "Plugin v2 detail file missing: $($plugin.detail_url)"
+
+    $detail = Get-Content -Raw -Encoding UTF8 $detailPath | ConvertFrom-Json
+    Assert-RegistryCondition -Condition ([string]$detail.plugin_id -eq [string]$plugin.plugin_id) -Message "Plugin v2 detail id mismatch: $($plugin.plugin_id)"
+    Assert-RegistryCondition -Condition (@($detail.versions).Count -gt 0) -Message "Plugin v2 detail has no versions: $($plugin.plugin_id)"
+}
+
+foreach ($package in $packageCatalog) {
+    Assert-RegistryCondition -Condition (-not [string]::IsNullOrWhiteSpace([string]$package.id)) -Message "Package v2 id is blank"
+    Assert-RegistryCondition -Condition (-not [string]::IsNullOrWhiteSpace([string]$package.detail_url)) -Message "Package v2 detail_url is blank: $($package.id)"
+    Assert-LightweightCatalogAndroidPackage -AndroidPackage $package.android -PackageId ([string]$package.id)
+
+    $detailPath = Resolve-RegistryFile -UrlOrPath ([string]$package.detail_url)
+    Assert-RegistryCondition -Condition ($null -ne $detailPath) -Message "Package v2 detail_url must be repository-relative: $($package.id)"
+    Assert-RegistryCondition -Condition (Test-Path -LiteralPath $detailPath -PathType Leaf) -Message "Package v2 detail file missing: $($package.detail_url)"
+
+    $detail = Get-Content -Raw -Encoding UTF8 $detailPath | ConvertFrom-Json
+    Assert-RegistryCondition -Condition ([string]$detail.package.id -eq [string]$package.id) -Message "Package v2 detail id mismatch: $($package.id)"
+    Assert-RegistryCondition -Condition ($null -ne $detail.versions) -Message "Package v2 detail has no versions: $($package.id)"
+}
 
 foreach ($plugin in $plugins) {
     Assert-RegistryCondition -Condition (-not [string]::IsNullOrWhiteSpace([string]$plugin.plugin_id)) -Message "Plugin id is blank"

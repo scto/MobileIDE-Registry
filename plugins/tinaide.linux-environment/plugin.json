@@ -1,0 +1,32 @@
+{
+  "id": "tinaide.linux-environment",
+  "plugin_id": "tinaide.linux-environment",
+  "name": "Linux Environment",
+  "description": "Provide Linux environment capability powered by PRoot.",
+  "category": "system",
+  "tags": [
+    "linux",
+    "proot",
+    "environment"
+  ],
+  "repository_url": "https://github.com/wuxianggujun/TinaIDE-Registry/tree/main/sources/plugins/tinaide.linux-environment",
+  "homepage_url": "https://github.com/wuxianggujun/TinaIDE-Registry",
+  "license": "Apache-2.0",
+  "publisher": {
+    "id": "tinaide",
+    "display_name": "TinaIDE"
+  },
+  "versions": [
+    {
+      "version": "1.0.0",
+      "version_code": 10000,
+      "file_size": 455,
+      "file_hash": "sha256:4328128a009700d1dc62d4551274166647f6870f0d449154aa185066bfe45d8f",
+      "download_url": "plugins/tinaide.linux-environment/1.0.0/tinaide.linux-environment.tinaplug",
+      "changelog": "Publish Linux environment plugin metadata from the standalone Registry.",
+      "created_at": "2026-06-01T00:00:00Z"
+    }
+  ],
+  "created_at": "2026-05-21T00:00:00Z",
+  "updated_at": "2026-06-01T00:00:00Z"
+}
