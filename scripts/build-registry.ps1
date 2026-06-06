@@ -1,5 +1,6 @@
 param(
-    [switch]$SkipStarterBuild
+    [switch]$SkipStarterBuild,
+    [switch]$IncludeLegacyV1
 )
 
 $ErrorActionPreference = "Stop"
@@ -16,6 +17,14 @@ function Write-Utf8NoBom {
     $encoding = [System.Text.UTF8Encoding]::new($false)
     $normalized = $Content -replace "`r`n", "`n" -replace "`r", "`n"
     [System.IO.File]::WriteAllText($Path, $normalized, $encoding)
+}
+
+function Remove-RegistryFileIfExists {
+    param([Parameter(Mandatory = $true)][string]$Path)
+
+    if (Test-Path -LiteralPath $Path -PathType Leaf) {
+        Remove-Item -LiteralPath $Path -Force
+    }
 }
 
 function Get-FileSha256 {
@@ -421,12 +430,16 @@ Write-Utf8NoBom `
     -Path (Join-Path $registryRoot "plugins/index.v2.json") `
     -Content (ConvertTo-JsonText $pluginsIndexV2)
 
-$pluginsIndex = [ordered]@{
-    plugins = @($pluginEntries)
+if ($IncludeLegacyV1) {
+    $pluginsIndex = [ordered]@{
+        plugins = @($pluginEntries)
+    }
+    Write-Utf8NoBom `
+        -Path (Join-Path $registryRoot "plugins/index.json") `
+        -Content (ConvertTo-JsonText $pluginsIndex)
+} else {
+    Remove-RegistryFileIfExists -Path (Join-Path $registryRoot "plugins/index.json")
 }
-Write-Utf8NoBom `
-    -Path (Join-Path $registryRoot "plugins/index.json") `
-    -Content (ConvertTo-JsonText $pluginsIndex)
 
 $packageMetadata = Get-Content -Raw -Encoding UTF8 (Join-Path $registryRoot "metadata/packages.json") |
     ConvertFrom-Json
@@ -536,14 +549,22 @@ Write-Utf8NoBom `
     -Path (Join-Path $registryRoot "packages/index.v2.json") `
     -Content (ConvertTo-JsonText $packagesIndexV2)
 
-$packagesIndex = [ordered]@{
-    categories = @($packageCategories)
-    packages = @($packageEntries)
-    versions = $versionMap
-    downloads = [ordered]@{}
+if ($IncludeLegacyV1) {
+    $packagesIndex = [ordered]@{
+        categories = @($packageCategories)
+        packages = @($packageEntries)
+        versions = $versionMap
+        downloads = [ordered]@{}
+    }
+    Write-Utf8NoBom `
+        -Path (Join-Path $registryRoot "packages/index.json") `
+        -Content (ConvertTo-JsonText $packagesIndex)
+} else {
+    Remove-RegistryFileIfExists -Path (Join-Path $registryRoot "packages/index.json")
 }
-Write-Utf8NoBom `
-    -Path (Join-Path $registryRoot "packages/index.json") `
-    -Content (ConvertTo-JsonText $packagesIndex)
 
-Write-Host "Registry indexes rebuilt."
+if ($IncludeLegacyV1) {
+    Write-Host "Registry indexes rebuilt, including legacy v1 compatibility indexes."
+} else {
+    Write-Host "Registry indexes rebuilt for v2-only clients."
+}

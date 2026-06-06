@@ -1,6 +1,7 @@
 param(
     [switch]$SkipBuild,
-    [switch]$SkipGitDiffCheck
+    [switch]$SkipGitDiffCheck,
+    [switch]$AllowLegacyV1
 )
 
 $ErrorActionPreference = "Stop"
@@ -48,6 +49,7 @@ function Assert-UniqueValues {
     )
 
     $duplicates = $Values |
+        Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } |
         Group-Object |
         Where-Object { $_.Count -gt 1 } |
         ForEach-Object { $_.Name }
@@ -82,6 +84,20 @@ function Test-JsonProperty {
     )
 
     return $null -ne $Object.PSObject.Properties[$Name]
+}
+
+function Assert-NoHeavyFields {
+    param(
+        [Parameter(Mandatory = $true)]$Object,
+        [Parameter(Mandatory = $true)][string]$ObjectName,
+        [Parameter(Mandatory = $true)][string[]]$Fields
+    )
+
+    foreach ($field in $Fields) {
+        Assert-RegistryCondition `
+            -Condition (-not (Test-JsonProperty -Object $Object -Name $field)) `
+            -Message "$ObjectName must not contain heavy field: $field"
+    }
 }
 
 function Assert-AndroidArtifactMetadata {
@@ -124,29 +140,45 @@ function Assert-AndroidArtifactMetadata {
     }
 }
 
-function Assert-LightweightCatalogAndroidPackage {
-    param(
-        $AndroidPackage,
-        [Parameter(Mandatory = $true)][string]$PackageId
-    )
+function Assert-LightweightPluginCatalogEntry {
+    param([Parameter(Mandatory = $true)]$Plugin)
 
-    if ($null -eq $AndroidPackage) {
+    Assert-NoHeavyFields `
+        -Object $Plugin `
+        -ObjectName "Plugin v2 catalog $($Plugin.plugin_id)" `
+        -Fields @(
+            "repository_url",
+            "homepage_url",
+            "license",
+            "versions",
+            "download_url",
+            "file_hash",
+            "file_size",
+            "changelog",
+            "download_count",
+            "rating_avg",
+            "rating_count"
+        )
+}
+
+function Assert-LightweightPackageCatalogEntry {
+    param([Parameter(Mandatory = $true)]$Package)
+
+    if ($null -eq $Package.android) {
         return
     }
 
-    Assert-AndroidArtifactMetadata -AndroidPackage $AndroidPackage -PackageId $PackageId
-    $heavyFields = @(
-        "download_url",
-        "download_sources",
-        "checksum",
-        "dependencies",
-        "release_notes"
-    )
-    foreach ($field in $heavyFields) {
-        Assert-RegistryCondition `
-            -Condition (-not (Test-JsonProperty -Object $AndroidPackage -Name $field)) `
-            -Message "Package v2 catalog must not contain heavy field ${PackageId}.android.${field}"
-    }
+    Assert-AndroidArtifactMetadata -AndroidPackage $Package.android -PackageId ([string]$Package.id)
+    Assert-NoHeavyFields `
+        -Object $Package.android `
+        -ObjectName "Package v2 catalog $($Package.id).android" `
+        -Fields @(
+            "download_url",
+            "download_sources",
+            "checksum",
+            "dependencies",
+            "release_notes"
+        )
 }
 
 function Assert-FileDigest {
@@ -187,42 +219,89 @@ function Assert-TinaPlugManifest {
     }
 }
 
-if (-not $SkipBuild) {
-    & (Join-Path $PSScriptRoot "build-registry.ps1")
+function Assert-DownloadFile {
+    param(
+        [Parameter(Mandatory = $true)][string]$UrlOrPath,
+        [long]$ExpectedSize = -1,
+        [string]$ExpectedHash = "",
+        [switch]$RequireTinaplugManifest
+    )
+
+    Assert-RegistryCondition `
+        -Condition (-not [string]::IsNullOrWhiteSpace($UrlOrPath)) `
+        -Message "Download URL is blank"
+
+    $downloadPath = Resolve-RegistryFile -UrlOrPath $UrlOrPath
+    if ($null -eq $downloadPath) {
+        return
+    }
+
+    Assert-FileDigest -Path $downloadPath -ExpectedSize $ExpectedSize -ExpectedHash $ExpectedHash
+    if ($RequireTinaplugManifest) {
+        Assert-TinaPlugManifest -Path $downloadPath
+    }
 }
 
-$pluginsIndexPath = Join-Path $registryRoot "plugins/index.json"
-$packagesIndexPath = Join-Path $registryRoot "packages/index.json"
+function Get-PackageVersionEntries {
+    param($Versions)
+
+    $entries = @()
+    if ($null -eq $Versions) {
+        return ,@($entries)
+    }
+
+    foreach ($packageVersionGroup in $Versions.PSObject.Properties) {
+        foreach ($version in @($packageVersionGroup.Value)) {
+            $entries += $version
+        }
+    }
+
+    return ,@($entries)
+}
+
+if (-not $SkipBuild) {
+    if ($AllowLegacyV1) {
+        & (Join-Path $PSScriptRoot "build-registry.ps1") -IncludeLegacyV1
+    } else {
+        & (Join-Path $PSScriptRoot "build-registry.ps1")
+    }
+}
+
 $pluginsIndexV2Path = Join-Path $registryRoot "plugins/index.v2.json"
 $packagesIndexV2Path = Join-Path $registryRoot "packages/index.v2.json"
+$pluginsIndexPath = Join-Path $registryRoot "plugins/index.json"
+$packagesIndexPath = Join-Path $registryRoot "packages/index.json"
 
-Assert-RegistryCondition -Condition (Test-Path -LiteralPath $pluginsIndexPath) -Message "Missing plugins/index.json"
-Assert-RegistryCondition -Condition (Test-Path -LiteralPath $packagesIndexPath) -Message "Missing packages/index.json"
 Assert-RegistryCondition -Condition (Test-Path -LiteralPath $pluginsIndexV2Path) -Message "Missing plugins/index.v2.json"
 Assert-RegistryCondition -Condition (Test-Path -LiteralPath $packagesIndexV2Path) -Message "Missing packages/index.v2.json"
 
-$pluginsIndex = Get-Content -Raw -Encoding UTF8 $pluginsIndexPath | ConvertFrom-Json
-$packagesIndex = Get-Content -Raw -Encoding UTF8 $packagesIndexPath | ConvertFrom-Json
+if ($AllowLegacyV1) {
+    Assert-RegistryCondition -Condition (Test-Path -LiteralPath $pluginsIndexPath) -Message "Missing legacy plugins/index.json"
+    Assert-RegistryCondition -Condition (Test-Path -LiteralPath $packagesIndexPath) -Message "Missing legacy packages/index.json"
+} else {
+    Assert-RegistryCondition -Condition (-not (Test-Path -LiteralPath $pluginsIndexPath)) -Message "Legacy plugins/index.json must not be generated by default"
+    Assert-RegistryCondition -Condition (-not (Test-Path -LiteralPath $packagesIndexPath)) -Message "Legacy packages/index.json must not be generated by default"
+}
+
 $pluginsIndexV2 = Get-Content -Raw -Encoding UTF8 $pluginsIndexV2Path | ConvertFrom-Json
 $packagesIndexV2 = Get-Content -Raw -Encoding UTF8 $packagesIndexV2Path | ConvertFrom-Json
 
-$plugins = @($pluginsIndex.plugins)
-$packages = @($packagesIndex.packages)
 $pluginCatalog = @($pluginsIndexV2.plugins)
 $packageCatalog = @($packagesIndexV2.packages)
+$packageCategories = @($packagesIndexV2.categories)
 
 Assert-RegistryCondition -Condition ([int]$pluginsIndexV2.schema_version -eq 2) -Message "Invalid plugins/index.v2.json schema_version"
 Assert-RegistryCondition -Condition ([int]$packagesIndexV2.schema_version -eq 2) -Message "Invalid packages/index.v2.json schema_version"
-Assert-RegistryCondition -Condition ($pluginCatalog.Count -eq $plugins.Count) -Message "Plugin v2 catalog count does not match v1 index"
-Assert-RegistryCondition -Condition ($packageCatalog.Count -eq $packages.Count) -Message "Package v2 catalog count does not match v1 index"
-Assert-UniqueValues -Values @($plugins | ForEach-Object { $_.plugin_id }) -Name "plugin_id"
-Assert-UniqueValues -Values @($packages | ForEach-Object { $_.id }) -Name "package id"
 Assert-UniqueValues -Values @($pluginCatalog | ForEach-Object { $_.plugin_id }) -Name "plugin v2 plugin_id"
 Assert-UniqueValues -Values @($packageCatalog | ForEach-Object { $_.id }) -Name "package v2 id"
+Assert-UniqueValues -Values @($packageCategories | ForEach-Object { $_.id }) -Name "package category id"
+
+$categoryIds = @($packageCategories | ForEach-Object { [string]$_.id })
 
 foreach ($plugin in $pluginCatalog) {
     Assert-RegistryCondition -Condition (-not [string]::IsNullOrWhiteSpace([string]$plugin.plugin_id)) -Message "Plugin v2 id is blank"
     Assert-RegistryCondition -Condition (-not [string]::IsNullOrWhiteSpace([string]$plugin.detail_url)) -Message "Plugin v2 detail_url is blank: $($plugin.plugin_id)"
+    Assert-LightweightPluginCatalogEntry -Plugin $plugin
 
     $detailPath = Resolve-RegistryFile -UrlOrPath ([string]$plugin.detail_url)
     Assert-RegistryCondition -Condition ($null -ne $detailPath) -Message "Plugin v2 detail_url must be repository-relative: $($plugin.plugin_id)"
@@ -230,13 +309,31 @@ foreach ($plugin in $pluginCatalog) {
 
     $detail = Get-Content -Raw -Encoding UTF8 $detailPath | ConvertFrom-Json
     Assert-RegistryCondition -Condition ([string]$detail.plugin_id -eq [string]$plugin.plugin_id) -Message "Plugin v2 detail id mismatch: $($plugin.plugin_id)"
-    Assert-RegistryCondition -Condition (@($detail.versions).Count -gt 0) -Message "Plugin v2 detail has no versions: $($plugin.plugin_id)"
+
+    $versions = @($detail.versions)
+    Assert-RegistryCondition -Condition ($versions.Count -gt 0) -Message "Plugin v2 detail has no versions: $($plugin.plugin_id)"
+    Assert-UniqueValues -Values @($versions | ForEach-Object { $_.version }) -Name "plugin version for $($plugin.plugin_id)"
+
+    $versionNames = @($versions | ForEach-Object { [string]$_.version })
+    Assert-RegistryCondition -Condition ([string]$plugin.latest_version -in $versionNames) -Message "Plugin v2 latest_version missing from detail versions: $($plugin.plugin_id)"
+
+    foreach ($version in $versions) {
+        Assert-DownloadFile `
+            -UrlOrPath ([string]$version.download_url) `
+            -ExpectedSize ([long]$version.file_size) `
+            -ExpectedHash ([string]$version.file_hash) `
+            -RequireTinaplugManifest
+    }
 }
 
 foreach ($package in $packageCatalog) {
     Assert-RegistryCondition -Condition (-not [string]::IsNullOrWhiteSpace([string]$package.id)) -Message "Package v2 id is blank"
     Assert-RegistryCondition -Condition (-not [string]::IsNullOrWhiteSpace([string]$package.detail_url)) -Message "Package v2 detail_url is blank: $($package.id)"
-    Assert-LightweightCatalogAndroidPackage -AndroidPackage $package.android -PackageId ([string]$package.id)
+    Assert-LightweightPackageCatalogEntry -Package $package
+
+    if (-not [string]::IsNullOrWhiteSpace([string]$package.category)) {
+        Assert-RegistryCondition -Condition ([string]$package.category -in $categoryIds) -Message "Package v2 category is not declared: $($package.id)"
+    }
 
     $detailPath = Resolve-RegistryFile -UrlOrPath ([string]$package.detail_url)
     Assert-RegistryCondition -Condition ($null -ne $detailPath) -Message "Package v2 detail_url must be repository-relative: $($package.id)"
@@ -245,65 +342,57 @@ foreach ($package in $packageCatalog) {
     $detail = Get-Content -Raw -Encoding UTF8 $detailPath | ConvertFrom-Json
     Assert-RegistryCondition -Condition ([string]$detail.package.id -eq [string]$package.id) -Message "Package v2 detail id mismatch: $($package.id)"
     Assert-RegistryCondition -Condition ($null -ne $detail.versions) -Message "Package v2 detail has no versions: $($package.id)"
-}
 
-foreach ($plugin in $plugins) {
-    Assert-RegistryCondition -Condition (-not [string]::IsNullOrWhiteSpace([string]$plugin.plugin_id)) -Message "Plugin id is blank"
-    $versions = @($plugin.versions)
-    Assert-RegistryCondition -Condition ($versions.Count -gt 0) -Message "Plugin has no versions: $($plugin.plugin_id)"
-    Assert-UniqueValues -Values @($versions | ForEach-Object { $_.version }) -Name "plugin version for $($plugin.plugin_id)"
-
-    foreach ($version in $versions) {
-        $downloadPath = Resolve-RegistryFile -UrlOrPath ([string]$version.download_url)
-        if ($null -ne $downloadPath) {
-            Assert-FileDigest -Path $downloadPath -ExpectedSize ([long]$version.file_size) -ExpectedHash ([string]$version.file_hash)
-            Assert-TinaPlugManifest -Path $downloadPath
+    if ($null -ne $detail.package.android) {
+        Assert-AndroidArtifactMetadata -AndroidPackage $detail.package.android -PackageId ([string]$package.id)
+        if (-not [string]::IsNullOrWhiteSpace([string]$detail.package.android.download_url)) {
+            Assert-DownloadFile `
+                -UrlOrPath ([string]$detail.package.android.download_url) `
+                -ExpectedSize ([long]$detail.package.android.size) `
+                -ExpectedHash ([string]$detail.package.android.checksum)
         }
     }
-}
 
-foreach ($package in $packages) {
-    Assert-RegistryCondition -Condition (-not [string]::IsNullOrWhiteSpace([string]$package.id)) -Message "Package id is blank"
-    if ($null -ne $package.android) {
-        Assert-AndroidArtifactMetadata -AndroidPackage $package.android -PackageId ([string]$package.id)
+    $versionEntries = Get-PackageVersionEntries $detail.versions
+    Assert-RegistryCondition -Condition ($versionEntries.Count -gt 0) -Message "Package v2 detail has no version entries: $($package.id)"
+    Assert-UniqueValues `
+        -Values @($versionEntries | ForEach-Object { "{0}:{1}" -f $_.platform, $_.version }) `
+        -Name "package version for $($package.id)"
 
-        if (-not [string]::IsNullOrWhiteSpace([string]$package.android.download_url)) {
-            $downloadPath = Resolve-RegistryFile -UrlOrPath ([string]$package.android.download_url)
-            if ($null -ne $downloadPath) {
-                Assert-FileDigest `
-                    -Path $downloadPath `
-                    -ExpectedSize ([long]$package.android.size) `
-                    -ExpectedHash ([string]$package.android.checksum)
-            }
+    foreach ($version in $versionEntries) {
+        if ([string]$version.platform -eq "android") {
+            Assert-AndroidArtifactMetadata -AndroidPackage $version -PackageId ([string]$version.package_id)
         }
-    }
-}
 
-$versionEntries = @()
-if ($null -ne $packagesIndex.versions) {
-    foreach ($packageVersionGroup in $packagesIndex.versions.PSObject.Properties) {
-        foreach ($platformVersions in $packageVersionGroup.Value.PSObject.Properties) {
-            foreach ($version in @($platformVersions.Value)) {
-                $versionEntries += $version
-            }
-        }
-    }
-}
-
-foreach ($version in $versionEntries) {
-    if ([string]$version.platform -eq "android") {
-        Assert-AndroidArtifactMetadata -AndroidPackage $version -PackageId ([string]$version.package_id)
-    }
-
-    if (-not [string]::IsNullOrWhiteSpace([string]$version.download_url)) {
-        $downloadPath = Resolve-RegistryFile -UrlOrPath ([string]$version.download_url)
-        if ($null -ne $downloadPath) {
-            Assert-FileDigest `
-                -Path $downloadPath `
+        if (-not [string]::IsNullOrWhiteSpace([string]$version.download_url)) {
+            Assert-DownloadFile `
+                -UrlOrPath ([string]$version.download_url) `
                 -ExpectedSize ([long]$version.download_size) `
                 -ExpectedHash ([string]$version.checksum)
         }
     }
+
+    if ($null -ne $detail.downloads) {
+        foreach ($downloadEntry in $detail.downloads.PSObject.Properties) {
+            foreach ($source in @($downloadEntry.Value.sources)) {
+                if (-not [string]::IsNullOrWhiteSpace([string]$source.url)) {
+                    Assert-DownloadFile `
+                        -UrlOrPath ([string]$source.url) `
+                        -ExpectedSize ([long]$downloadEntry.Value.size) `
+                        -ExpectedHash ([string]$downloadEntry.Value.checksum)
+                }
+            }
+        }
+    }
+}
+
+if ($AllowLegacyV1) {
+    $pluginsIndex = Get-Content -Raw -Encoding UTF8 $pluginsIndexPath | ConvertFrom-Json
+    $packagesIndex = Get-Content -Raw -Encoding UTF8 $packagesIndexPath | ConvertFrom-Json
+    $legacyPlugins = @($pluginsIndex.plugins)
+    $legacyPackages = @($packagesIndex.packages)
+    Assert-RegistryCondition -Condition ($legacyPlugins.Count -eq $pluginCatalog.Count) -Message "Legacy plugin index count does not match v2 catalog"
+    Assert-RegistryCondition -Condition ($legacyPackages.Count -eq $packageCatalog.Count) -Message "Legacy package index count does not match v2 catalog"
 }
 
 if (-not $SkipGitDiffCheck) {
@@ -311,4 +400,4 @@ if (-not $SkipGitDiffCheck) {
     Assert-RegistryCondition -Condition ([string]::IsNullOrWhiteSpace(($diff -join "`n"))) -Message "Registry build produced uncommitted changes."
 }
 
-Write-Host ("Registry validation passed: plugins={0}, packages={1}" -f $plugins.Count, $packages.Count)
+Write-Host ("Registry validation passed: plugins={0}, packages={1}, legacyV1={2}" -f $pluginCatalog.Count, $packageCatalog.Count, [bool]$AllowLegacyV1)

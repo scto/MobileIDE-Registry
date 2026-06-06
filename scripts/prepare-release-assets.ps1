@@ -10,6 +10,7 @@ $outputRoot = if ([System.IO.Path]::IsPathRooted($OutputDir)) {
 } else {
     Join-Path $registryRoot $OutputDir
 }
+$copiedAssets = @{}
 
 function Resolve-RegistryFile {
     param([Parameter(Mandatory = $true)][string]$UrlOrPath)
@@ -37,11 +38,46 @@ function Copy-ReleaseAsset {
         [Parameter(Mandatory = $true)][string]$AssetName
     )
 
-    $target = Join-Path $outputRoot $AssetName
-    if (Test-Path -LiteralPath $target) {
+    if ($copiedAssets.ContainsKey($AssetName)) {
+        if ($copiedAssets[$AssetName] -eq $SourcePath) {
+            return
+        }
         throw "Duplicate release asset name: $AssetName"
     }
+
+    $target = Join-Path $outputRoot $AssetName
     Copy-Item -LiteralPath $SourcePath -Destination $target -Force
+    $copiedAssets[$AssetName] = $SourcePath
+}
+
+function Copy-RegistryAsset {
+    param(
+        [Parameter(Mandatory = $true)][string]$UrlOrPath,
+        [Parameter(Mandatory = $true)][string]$AssetName
+    )
+
+    $source = Resolve-RegistryFile -UrlOrPath $UrlOrPath
+    if ($null -eq $source) {
+        return
+    }
+    Copy-ReleaseAsset -SourcePath $source -AssetName $AssetName
+}
+
+function Get-PackageVersionEntries {
+    param($Versions)
+
+    $entries = @()
+    if ($null -eq $Versions) {
+        return ,@($entries)
+    }
+
+    foreach ($packageVersionGroup in $Versions.PSObject.Properties) {
+        foreach ($version in @($packageVersionGroup.Value)) {
+            $entries += $version
+        }
+    }
+
+    return ,@($entries)
 }
 
 if (Test-Path -LiteralPath $outputRoot) {
@@ -49,59 +85,55 @@ if (Test-Path -LiteralPath $outputRoot) {
 }
 New-Item -ItemType Directory -Force -Path $outputRoot | Out-Null
 
-$pluginsIndexPath = Join-Path $registryRoot "plugins/index.json"
-$packagesIndexPath = Join-Path $registryRoot "packages/index.json"
 $pluginsIndexV2Path = Join-Path $registryRoot "plugins/index.v2.json"
 $packagesIndexV2Path = Join-Path $registryRoot "packages/index.v2.json"
 Copy-ReleaseAsset -SourcePath $pluginsIndexV2Path -AssetName "plugins.index.v2.json"
 Copy-ReleaseAsset -SourcePath $packagesIndexV2Path -AssetName "packages.index.v2.json"
-Copy-ReleaseAsset -SourcePath $pluginsIndexPath -AssetName "plugins.index.json"
-Copy-ReleaseAsset -SourcePath $packagesIndexPath -AssetName "packages.index.json"
 
 $pluginCatalog = (Get-Content $pluginsIndexV2Path -Raw -Encoding UTF8 | ConvertFrom-Json).plugins
 foreach ($plugin in @($pluginCatalog)) {
-    $source = Resolve-RegistryFile -UrlOrPath ([string]$plugin.detail_url)
-    if ($null -eq $source) {
+    $detailSource = Resolve-RegistryFile -UrlOrPath ([string]$plugin.detail_url)
+    if ($null -eq $detailSource) {
         continue
     }
-    $assetName = "plugins.{0}.plugin.json" -f $plugin.plugin_id
-    Copy-ReleaseAsset -SourcePath $source -AssetName $assetName
+
+    $detailAssetName = "plugins.{0}.plugin.json" -f $plugin.plugin_id
+    Copy-ReleaseAsset -SourcePath $detailSource -AssetName $detailAssetName
+
+    $detail = Get-Content $detailSource -Raw -Encoding UTF8 | ConvertFrom-Json
+    foreach ($version in @($detail.versions)) {
+        if ([string]::IsNullOrWhiteSpace([string]$version.download_url)) {
+            continue
+        }
+        $assetName = "{0}-{1}.tinaplug" -f $detail.plugin_id, $version.version
+        Copy-RegistryAsset -UrlOrPath ([string]$version.download_url) -AssetName $assetName
+    }
 }
 
 $packageCatalog = (Get-Content $packagesIndexV2Path -Raw -Encoding UTF8 | ConvertFrom-Json).packages
 foreach ($package in @($packageCatalog)) {
-    $source = Resolve-RegistryFile -UrlOrPath ([string]$package.detail_url)
-    if ($null -eq $source) {
+    $detailSource = Resolve-RegistryFile -UrlOrPath ([string]$package.detail_url)
+    if ($null -eq $detailSource) {
         continue
     }
-    $assetName = "packages.{0}.package.json" -f $package.id
-    Copy-ReleaseAsset -SourcePath $source -AssetName $assetName
-}
 
-$plugins = (Get-Content $pluginsIndexPath -Raw -Encoding UTF8 | ConvertFrom-Json).plugins
-foreach ($plugin in @($plugins)) {
-    foreach ($version in @($plugin.versions)) {
+    $detailAssetName = "packages.{0}.package.json" -f $package.id
+    Copy-ReleaseAsset -SourcePath $detailSource -AssetName $detailAssetName
+
+    $detail = Get-Content $detailSource -Raw -Encoding UTF8 | ConvertFrom-Json
+    $versionEntries = Get-PackageVersionEntries $detail.versions
+    foreach ($version in $versionEntries) {
+        if ([string]::IsNullOrWhiteSpace([string]$version.download_url)) {
+            continue
+        }
         $source = Resolve-RegistryFile -UrlOrPath ([string]$version.download_url)
         if ($null -eq $source) {
             continue
         }
-        $assetName = "{0}-{1}.tinaplug" -f $plugin.plugin_id, $version.version
+        $leaf = Split-Path -Leaf $source
+        $assetName = "{0}-{1}-{2}" -f $detail.package.id, $version.version, $leaf
         Copy-ReleaseAsset -SourcePath $source -AssetName $assetName
     }
-}
-
-$packages = (Get-Content $packagesIndexPath -Raw -Encoding UTF8 | ConvertFrom-Json).packages
-foreach ($package in @($packages)) {
-    if ($null -eq $package.android -or [string]::IsNullOrWhiteSpace([string]$package.android.download_url)) {
-        continue
-    }
-    $source = Resolve-RegistryFile -UrlOrPath ([string]$package.android.download_url)
-    if ($null -eq $source) {
-        continue
-    }
-    $leaf = Split-Path -Leaf $source
-    $assetName = "{0}-{1}-{2}" -f $package.id, $package.android.version, $leaf
-    Copy-ReleaseAsset -SourcePath $source -AssetName $assetName
 }
 
 $count = (Get-ChildItem -LiteralPath $outputRoot -File).Count

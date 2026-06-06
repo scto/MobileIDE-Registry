@@ -101,10 +101,8 @@ jobs:
             "- packages/index.v2.json",
             "- plugins/<plugin-id>/plugin.json",
             "- packages/<package-id>/package.json",
-            "- plugins/index.json",
-            "- packages/index.json",
             "",
-            "Release assets include individual plugin/package files, v2 details, v2 indexes, and v1 compatibility indexes. Do not use the auto-generated source code archives for marketplace downloads."
+            "Release assets include individual plugin/package files, v2 details, and v2 indexes. Do not use the auto-generated source code archives for marketplace downloads."
           )
           $notes | Set-Content -Path release-notes.md -Encoding UTF8
 
