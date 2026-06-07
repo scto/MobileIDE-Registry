@@ -1,0 +1,45 @@
+{
+  "package": {
+    "id": "box2d",
+    "name": "Box2D",
+    "description": "2D physics engine for games",
+    "category": "library",
+    "homepage": "https://box2d.org/",
+    "android": {
+      "version": "3.1.1",
+      "artifact_type": "static",
+      "install_type": "download",
+      "size": 585852,
+      "download_url": "packages/box2d/3.1.1/box2d.tar.xz",
+      "checksum": "sha256:f060c21c5bca48b544f789c789ace126437c036b8048190b0c771e488e6c71e3",
+      "is_latest": true,
+      "release_notes": "Adds the Box2D 3.x static library and CMake package for Android arm64 projects.",
+      "abi": [
+        "arm64-v8a"
+      ]
+    }
+  },
+  "versions": {
+    "android": [
+      {
+        "id": 10,
+        "package_id": "box2d",
+        "platform": "android",
+        "version": "3.1.1",
+        "artifact_type": "static",
+        "install_type": "download",
+        "download_size": 585852,
+        "download_url": "packages/box2d/3.1.1/box2d.tar.xz",
+        "checksum": "sha256:f060c21c5bca48b544f789c789ace126437c036b8048190b0c771e488e6c71e3",
+        "is_latest": true,
+        "release_notes": "Adds the Box2D 3.x static library and CMake package for Android arm64 projects.",
+        "abi": [
+          "arm64-v8a"
+        ]
+      }
+    ]
+  },
+  "downloads": {
+
+  }
+}

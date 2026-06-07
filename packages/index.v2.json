@@ -116,6 +116,75 @@
         "size": 29680,
         "is_latest": true
       }
+    },
+    {
+      "id": "sdl3-image",
+      "name": "SDL3_image",
+      "description": "Image loading library for SDL3 with lightweight built-in backends",
+      "category": "library",
+      "homepage": "https://github.com/libsdl-org/SDL_image",
+      "detail_url": "packages/sdl3-image/package.json",
+      "android": {
+        "version": "3.4.4",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "size": 325440,
+        "is_latest": true,
+        "abi": [
+          "arm64-v8a"
+        ]
+      }
+    },
+    {
+      "id": "sdl3-ttf",
+      "name": "SDL3_ttf",
+      "description": "TrueType font rendering library for SDL3 using vendored FreeType",
+      "category": "library",
+      "homepage": "https://github.com/libsdl-org/SDL_ttf",
+      "detail_url": "packages/sdl3-ttf/package.json",
+      "android": {
+        "version": "3.2.2",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "size": 1151524,
+        "is_latest": true,
+        "abi": [
+          "arm64-v8a"
+        ]
+      }
+    },
+    {
+      "id": "box2d",
+      "name": "Box2D",
+      "description": "2D physics engine for games",
+      "category": "library",
+      "homepage": "https://box2d.org/",
+      "detail_url": "packages/box2d/package.json",
+      "android": {
+        "version": "3.1.1",
+        "artifact_type": "static",
+        "install_type": "download",
+        "size": 585852,
+        "is_latest": true,
+        "abi": [
+          "arm64-v8a"
+        ]
+      }
+    },
+    {
+      "id": "miniaudio",
+      "name": "miniaudio",
+      "description": "Single-file audio playback and capture library",
+      "category": "library",
+      "homepage": "https://miniaud.io/",
+      "detail_url": "packages/miniaudio/package.json",
+      "android": {
+        "version": "0.11.25",
+        "artifact_type": "header",
+        "install_type": "download",
+        "size": 458332,
+        "is_latest": true
+      }
     }
   ]
 }

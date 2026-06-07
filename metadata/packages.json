@@ -113,6 +113,71 @@
         "is_latest": true,
         "release_notes": "Initial Registry-hosted TinyXML-2 source package."
       }
+    },
+    {
+      "id": "sdl3-image",
+      "name": "SDL3_image",
+      "description": "Image loading library for SDL3 with lightweight built-in backends",
+      "category": "library",
+      "homepage": "https://github.com/libsdl-org/SDL_image",
+      "file": "packages/sdl3-image/3.4.4/sdl3-image.tar.xz",
+      "android": {
+        "version": "3.4.4",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "abi": ["arm64-v8a"],
+        "dependencies": ["sdl3"],
+        "is_latest": true,
+        "release_notes": "Adds SDL3_image for SDL3 projects. This build uses stb and built-in loaders, and disables AVIF, JXL, TIFF, WEBP, and libpng dynamic dependencies."
+      }
+    },
+    {
+      "id": "sdl3-ttf",
+      "name": "SDL3_ttf",
+      "description": "TrueType font rendering library for SDL3 using vendored FreeType",
+      "category": "library",
+      "homepage": "https://github.com/libsdl-org/SDL_ttf",
+      "file": "packages/sdl3-ttf/3.2.2/sdl3-ttf.tar.xz",
+      "android": {
+        "version": "3.2.2",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "abi": ["arm64-v8a"],
+        "dependencies": ["sdl3"],
+        "is_latest": true,
+        "release_notes": "Adds SDL3_ttf for SDL3 projects. This build uses vendored FreeType and disables HarfBuzz and PlutoSVG to keep the first Android package small."
+      }
+    },
+    {
+      "id": "box2d",
+      "name": "Box2D",
+      "description": "2D physics engine for games",
+      "category": "library",
+      "homepage": "https://box2d.org/",
+      "file": "packages/box2d/3.1.1/box2d.tar.xz",
+      "android": {
+        "version": "3.1.1",
+        "artifact_type": "static",
+        "install_type": "download",
+        "abi": ["arm64-v8a"],
+        "is_latest": true,
+        "release_notes": "Adds the Box2D 3.x static library and CMake package for Android arm64 projects."
+      }
+    },
+    {
+      "id": "miniaudio",
+      "name": "miniaudio",
+      "description": "Single-file audio playback and capture library",
+      "category": "library",
+      "homepage": "https://miniaud.io/",
+      "file": "packages/miniaudio/0.11.25/miniaudio.tar.xz",
+      "android": {
+        "version": "0.11.25",
+        "artifact_type": "header",
+        "install_type": "download",
+        "is_latest": true,
+        "release_notes": "Adds the miniaudio single-header library for lightweight game audio experiments."
+      }
     }
   ]
 }

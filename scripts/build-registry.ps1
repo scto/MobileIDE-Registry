@@ -458,6 +458,7 @@ foreach ($pkg in @($packageMetadata.packages)) {
     $checksum = "sha256:{0}" -f (Get-FileSha256 $file.FullName)
     $artifactType = Get-PackageArtifactType -AndroidPackage $pkg.android -PackageId ([string]$pkg.id)
     $androidAbi = Get-StringArrayOrNull $pkg.android.abi
+    $androidDependencies = Get-StringArrayOrNull $pkg.android.dependencies
 
     $androidEntry = [ordered]@{
         version = [string]$pkg.android.version
@@ -470,6 +471,7 @@ foreach ($pkg in @($packageMetadata.packages)) {
         release_notes = [string]$pkg.android.release_notes
     }
     Add-OptionalField -Target $androidEntry -Name "abi" -Value $androidAbi
+    Add-OptionalField -Target $androidEntry -Name "dependencies" -Value $androidDependencies
 
     $packageEntry = [ordered]@{
         id = [string]$pkg.id
@@ -495,6 +497,7 @@ foreach ($pkg in @($packageMetadata.packages)) {
         release_notes = [string]$pkg.android.release_notes
     }
     Add-OptionalField -Target $androidVersionEntry -Name "abi" -Value $androidAbi
+    Add-OptionalField -Target $androidVersionEntry -Name "dependencies" -Value $androidDependencies
 
     $versionMap[[string]$pkg.id] = [ordered]@{
         android = @($androidVersionEntry)

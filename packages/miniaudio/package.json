@@ -1,0 +1,39 @@
+{
+  "package": {
+    "id": "miniaudio",
+    "name": "miniaudio",
+    "description": "Single-file audio playback and capture library",
+    "category": "library",
+    "homepage": "https://miniaud.io/",
+    "android": {
+      "version": "0.11.25",
+      "artifact_type": "header",
+      "install_type": "download",
+      "size": 458332,
+      "download_url": "packages/miniaudio/0.11.25/miniaudio.tar.xz",
+      "checksum": "sha256:0cc4589f049189c54f0826cfeeb50c35e95a578d59d370841df5aa34ff494ded",
+      "is_latest": true,
+      "release_notes": "Adds the miniaudio single-header library for lightweight game audio experiments."
+    }
+  },
+  "versions": {
+    "android": [
+      {
+        "id": 11,
+        "package_id": "miniaudio",
+        "platform": "android",
+        "version": "0.11.25",
+        "artifact_type": "header",
+        "install_type": "download",
+        "download_size": 458332,
+        "download_url": "packages/miniaudio/0.11.25/miniaudio.tar.xz",
+        "checksum": "sha256:0cc4589f049189c54f0826cfeeb50c35e95a578d59d370841df5aa34ff494ded",
+        "is_latest": true,
+        "release_notes": "Adds the miniaudio single-header library for lightweight game audio experiments."
+      }
+    ]
+  },
+  "downloads": {
+
+  }
+}
