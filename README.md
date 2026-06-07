@@ -1,5 +1,7 @@
 # TinaIDE Registry
 
+[![爱发电](https://img.shields.io/badge/%E7%88%B1%E5%8F%91%E7%94%B5-%E6%94%AF%E6%8C%81%E5%BC%80%E6%BA%90-946ce6?style=flat-square)](https://ifdian.net/a/wuxianggujun)
+
 ## Registry v2 索引
 
 当前 Registry 默认只发布 v2 轻量索引和单项详情文件：
@@ -111,3 +113,18 @@ pwsh ./scripts/validate-registry.ps1
 - 依赖包发布文件放在 `packages/<package-id>/<version>/`。
 - 大文件可以不放入本仓库，但必须在索引中填写可信 CDN、对象存储或自建代理的绝对 URL。
 - 不要把 Android 客户端源码、后端、数据库或管理后台放入本仓库。
+
+## 支持项目
+
+这个项目长期免费开源，但持续开发、测试、文档维护和设备适配都需要时间与成本。
+
+如果它帮你节省了时间，欢迎通过爱发电支持我继续维护：
+
+[支持无相孤君继续开源](https://ifdian.net/a/wuxianggujun)
+
+你的支持会优先用于：
+
+- 修复问题和维护稳定版本。
+- 补充中文文档、教程和示例。
+- 维护构建环境、测试设备和相关服务。
+- 推动更多实用工具长期更新。
