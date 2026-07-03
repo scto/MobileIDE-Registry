@@ -38,7 +38,8 @@ Package content and device compatibility are expressed through metadata:
 Public Registry for the TinaIDE plugin market and dependency package market.
 Clients read sequentially by default:
 ```text
-[https://raw.githubusercontent.com/wuxianggujun/TinaIDE-Registry/main](https://raw.githubusercontent.com/wuxianggujun/TinaIDE-Registry/main)
+[https://raw.githubusercontent.com/scto/TinaIDE-Registry/main](https://raw.githubusercontent.com/scto/TinaIDE-Registry/main)
+
 [https://cdn.jsdelivr.net/gh/wuxianggujun/TinaIDE-Registry@main](https://cdn.jsdelivr.net/gh/wuxianggujun/TinaIDE-Registry@main)
 
 ```
